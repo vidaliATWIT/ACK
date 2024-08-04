@@ -1,17 +1,18 @@
 -- Define player table
 local player = {}
 local config = require("conf")
+local GM = require("GameMaster")
 local scale = config.scale_factor
 
 
 function player:load()
     player.image = love.graphics.newImage("res/pc.png")
-    player.x=16*scale
-    player.y=16*scale
+    player.x=1
+    player.y=1
     player.targetX=player.x
     player.targetY=player.y
     player.moving=false
-    player.speed=16*scale
+    player.speed=1
     player.torch_light=50
 end
 

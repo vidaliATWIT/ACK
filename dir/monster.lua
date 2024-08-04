@@ -1,16 +1,14 @@
 local Entity = require("Entity")
 local monster = {}
 local monster_dmg = {4, 6, 8, 10, 12, 12, 16, 18, 10, 22}
-local config = require("conf")
-local scale = config.scale_factor
 
 function monster:new(o)
     o = Entity:new(o)
     setmetatable(o,self)
     self.__index=self
 
-    o.x = o.x*scale*16
-    o.y = o.y*scale*16
+    o.x = o.x
+    o.y = o.y
     o.armor = o.armor or 4
     return o
 end

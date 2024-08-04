@@ -56,6 +56,7 @@ end
 
 function EntityManager:moveEntity(entity, newX, newY)
     if newX < 1 or newX > self.worldWidth or newY < 1 or newY > self.worldHeight then
+        print("Out of bounds!")
         return false
     end
 
