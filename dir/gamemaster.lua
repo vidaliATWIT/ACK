@@ -1,27 +1,74 @@
 local EntityManager = require("EntityManager")
 local conf = require("conf")
 local GameMaster = {}
+local GM = {} -- using prototypes to make this easier to read
+setmetatable(GM, {__index = GameMaster})
 local Node = require("Node") -- Used for A*
-local PriorityQueue = require("PriorityQueue")
+local PriorityQueue = require("lib/PriorityQueue")
+local scale = conf.scale_factor
+local TILE_SIZE = 16
+local PIXEL_TO_TILE = 1 / scale / TILE_SIZE
+local TILE_TO_PIXEL = TILE_SIZE * scale -- also pixel size at current screen resolution
 
-function GameMaster.new(useHashTable, worldWidth, worldHeight, player)
-    local entityManager = EntityManager.new(useHashTable,worldWidth,worldHeight)
-    self.turn=0 -- Handles turns
-    self.round=0
+-- Controls all aspects of game logic and accesess map, player and entity locations on map
+function GameMaster.initialize(useHashTable, worldWidth, worldHeight, map, player)
+    GM.entityManager = EntityManager.new(useHashTable,worldWidth,worldHeight)
+    GM.turn=0 -- Handles turns
+    GM.round=0
+    GM.offsetX=0
+    GM.offsetY=0
+    GM.player=player
+    _G.map = map
 end
 
 -- Called by move
-function GameMaster:nextRound()
-    if self.turn%6==0 then
-        self.round = self.round+1
+function GameMaster.nextRound()
+    if GM.turn%6==0 then
+        GM.round = GM.round+1
         -- Handle effects for next round e.g. usage dice, random encounters
     end
+end
 
 -- Called by move
-function GameMaster:nextTurn()
-    self.turn=self.turn+1
+function GameMaster.nextTurn()
+    GM.turn=GM.turn+1
     -- Handle effects for next round
 end
+
+function GameMaster.getTileAt(layerName, x, y)
+    local layer = _G.map.layers[layerName]
+    if not layer then
+        error("Layer not found: " .. layerName)
+    end
+    local tile = layer.data[y+1-GM.offsetY][x+1-GM.offsetX] -- WHY?!?! WHY IS IT TRANSPOSED?!?! WHO DID THIS?!
+    return tile
+end
+
+function GameMaster.canMove(x,y)
+    -- check if where you're moving to is walkable
+    local tileX, tileY = math.floor(x*PIXEL_TO_TILE),math.floor(y*PIXEL_TO_TILE)
+    local Floor = GM.getTileAt("Floor",tileX,tileY)
+    local Entity = GM.entityManager:getEntityAt(x, y)
+    if Entity~=nil then
+        Entity:interact()
+    end
+    return Floor~=nil and Entity==nil
+end
+
+-- Called to add monsters
+function GameMaster.addEntity(entity)
+    GM.entityManager:addEntity(entity)
+end
+
+function GameMaster.updateOffset(dx,dy)
+    GM.offsetX=GM.offsetX+dx
+    GM.offsetY=GM.offsetY+dy
+end
+
+function GameMaster.getOffset()
+    return GM.offsetX, GM.offsetY
+end
+
 
 -- Manhattan Heuristic for A*
 function GameMaster:heuristic(pos1, pos2)
@@ -30,21 +77,5 @@ function GameMaster:heuristic(pos1, pos2)
     return dx + dy
 end
 
--- Is called by monsters and npcs during attack phase 
-function GameMaster:findPath(start_pos, end_pos)
-    -- Imlement A*
-    local open_set = PriorityQueue:new("max")
-    local closed_set = {}
-    -- Create start and end node
-    start_node = Node:new{parent=nil, position=start_pos}
-    start_node.g = start_node.h = start_node.f = 0
-    end_node = Node:new{parent=nil, position=end_pos}
-    end_node.g = end_node.h = end_node.f = 0
-    -- add start_node to open_set
-    open_set.insert(start_node)
-    -- add stop condition
-    outer_iterations = 0
-
-
-end
+return GM
 

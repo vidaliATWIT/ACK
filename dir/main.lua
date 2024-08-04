@@ -1,31 +1,11 @@
 local player = require("player")
-local config = require("conf")
+local conf = require("conf")
 local monster = require("monster")
-local EntityManager = require("EntityManager")
-local scale = config.scale_factor
+local GM = require("GameMaster")
+local scale = conf.scale_factor
 local TILE_SIZE = 16
-local PIXEL_TO_TILE = 1 / config.scale_factor / TILE_SIZE
-local TILE_TO_PIXEL = TILE_SIZE * config.scale_factor -- also pixel size at current screen resolution
-
-function canMove(x,y)
-    -- check if where you're moving to is walkable
-    local tileX, tileY = math.floor(x*PIXEL_TO_TILE),math.floor(y*PIXEL_TO_TILE)
-    local Floor = getTileAt("Floor",tileX,tileY)
-    local Entity = entityManager:getEntityAt(x, y)
-    if Entity~=nil then
-        Entity:interact()
-    end
-    return Floor~=nil and Entity==nil
-end
-
-function getTileAt(layerName, x, y)
-    local layer = _G.map.layers[layerName]
-    if not layer then
-        error("Layer not found: " .. layerName)
-    end
-    local tile = layer.data[y+1-_G.offsetY][x+1-_G.offsetX] -- WHY?!?! WHY IS IT TRANSPOSED?!?! WHO DID THIS?!
-    return tile
-end
+local PIXEL_TO_TILE = 1 / scale / TILE_SIZE
+local TILE_TO_PIXEL = TILE_SIZE * scale
 
 function love.load()
     -- Screen Setup
@@ -40,10 +20,11 @@ function love.load()
     _G.map = sti('tilemap.lua')
     -- Player Setup
     player.load()
+    -- Gamemaster setup
+    GM.initialize(true,16,16,_G.map,player)
     -- Entity Setup
-    entityManager = EntityManager.new(true, 16, 16)
     goblin = monster:new{name="goblin",y=1,x=5,sprite_path="/res/darkelf1.png"}
-    entityManager:addEntity(goblin)
+    GM.addEntity(goblin)
 end
 
 function love.update(dt)
@@ -75,8 +56,7 @@ end
  
 function love.draw()
     -- game rendering here
-    --_G.map:draw(0,0, 4, 4)
-    _G.map:draw(_G.offsetX*TILE_SIZE,_G.offsetY*TILE_SIZE,scale,scale)
+    _G.map:draw(GM.offsetX*TILE_SIZE,GM.offsetY*TILE_SIZE,scale,scale)
     goblin:draw()
     drawFog()
     player:draw()
@@ -85,16 +65,16 @@ end
 function love.keypressed(key)
     -- handle input
     local targetX, targetY = player:keypressed(key) -- screen coords
-    if canMove(targetX, targetY) then
+    if GM.canMove(targetX, targetY) then
         -- If scrolling scroll
         if targetX+(TILE_TO_PIXEL)>=_G.width then
-            _G.offsetX=_G.offsetX-1
+            GM.updateOffset(-1,0)
         elseif targetX-(TILE_TO_PIXEL)<0 then
-            _G.offsetX=_GoffsetX+1
+            GM.updateOffset(1,0)
         elseif targetY+(TILE_TO_PIXEL)>=_G.height then
-            _G.offsetY=_G.offsetY-1
+            GM.updateOffset(0,-1)
         elseif targetY-(TILE_TO_PIXEL)<0 then
-            _G.offsetY=_G.offsetY+1
+            GM.updateOffset(0,1)
         else -- else move player
             player:move()
         --end
