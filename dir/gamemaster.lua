@@ -10,6 +10,7 @@ local TILE_SIZE = 16
 local PIXEL_TO_TILE = 1 / scale / TILE_SIZE
 local TILE_TO_PIXEL = TILE_SIZE * scale -- also pixel size at current screen resolution
 local CollisionMatrix = {} -- representation of the map with entities, player, and walls
+local Enums = require("Enums")
 
 -- Controls all aspects of game logic and accesess map, player and entity locations on map
 function GameMaster.initialize(useHashTable, worldWidth, worldHeight, map, player)
@@ -44,10 +45,50 @@ function GameMaster.nextRound()
     end
 end
 
--- Called by move
+-- Called by move handles all entities in visible world
 function GameMaster.nextTurn()
+    local entities = GM.entityManager:getAllEntities()
+    local player_pos = {x=GM.player.x, y=GM.player.y}
+    for _, entity in pairs(entities) do
+        GM.handleEntityTurn(entity)
+    end
     GM.turn=GM.turn+1
-    -- Handle effects for next round
+end
+
+-- Handles turns for entities by checking state, getting relevant world information and passing onto entities to further allocate their actions
+function GameMaster.handleEntityTurn(entity)
+    local next_move = nil
+    print("Entity name and state: ", entity.name, entity.state)
+    GM.handleStateTransition(entity)
+
+    if entity.state==Enums.EntityState.IDLE then -- IDLE
+        if entity.type==Enums.EntityType.MONSTER then
+            next_move = entity:getIdleDirection()
+            GM.moveEntity(entity, next_move.x, next_move.y)
+        end
+    elseif entity.state==Enums.EntityState.AWARE then -- AWARE AND SEARCHING
+        if (entity.awareCooldown>0) then
+            next_move = GM.nextMove(entity:getPosition(), entity.lastKnownPlayerPos)
+            entity:decrementCooldown()
+        end
+    elseif entity.state==Enums.EntityState.ATTACK then -- ATTACKING
+        next_move = GM.nextMove(entity:getPosition(), GM.player:getPosition())
+    else
+        entity.state=Enums.EntityState.IDLE
+    end
+    if next_move then
+        GM.moveEntity(entity, next_move.x, next_move.y)
+    end
+end
+
+-- Helper function to encapsulate handling states
+function GameMaster.handleStateTransition(entity)
+    local distance = GM.heuristic(entity:getPosition(), GM.player:getPosition())
+    if (entity:scan(distance)) then 
+        entity.lastKnownPlayerPos=GM.player:getPosition()
+        local isVisible = GM:bresenhamLOS(entity:getPosition(), entity.lastKnownPlayerPos)
+        entity:search(isVisible) 
+    end
 end
 
 function GameMaster.getTileAt(layerName, x, y)
@@ -59,15 +100,16 @@ function GameMaster.getTileAt(layerName, x, y)
     return tile
 end
 
+-- Handles player move
 function GameMaster.canMove(x,y)
     if true then
         -- check if where you're moving to is walkable
-        local Floor = GM.getTileAt("Floor",x,y)
-        local Entity = GM.entityManager:getEntityAt(x, y)
-        if Entity~=nil then
-            Entity:interact()
+        local floor = GM.getTileAt("Floor",x,y)
+        local entity = GM.entityManager:getEntityAt(x, y)
+        if entity~=nil then
+            GM.handleInteraction(entity, GM.player)
         end
-        return Floor~=nil and Entity==nil
+        return floor~=nil and entity==nil
     else
        return not CollisionMatrix[x][y] 
     end
@@ -91,13 +133,28 @@ function GameMaster.getOffset()
     return GM.offsetX, GM.offsetY
 end
 
+function GameMaster.handleInteraction(entity, player)
+    local interaction = entity:interact(player)
+    if interaction.type=="combat" then
+        local hit, damage = interaction.result.hit, interaction.result.damage
+        print(entity.name, " HP: ", entity.hp)
+        GM.displayHit(hit, damage, GM.player.name, entity.name)
+        if entity:isAlive()==false then
+            GM.handleEntityDeath(entity)
+        end
+    elseif interaction.type=="dialogue" then
+    else
+    end
+end
+
 -- Monster Movement
 
 function GameMaster.moveEntity(entity, newX, newY)
     -- Remove monster from current position in WorldSpace
     local x,y = entity.x, entity.y
-    if newX==GM.player.x and newY==GM.player.y then
-        entity:attack()
+    if newX==GM.player.x and newY==GM.player.y then -- Only fire if state is attacking
+        hit, damage = entity:attack(GM.player)
+        GM.displayHit(hit, damage, entity.name, GM.player.name)
         return
     end
     if CollisionMatrix[x] and CollisionMatrix[x][y] then
@@ -109,7 +166,57 @@ function GameMaster.moveEntity(entity, newX, newY)
 end
 
 
-function GameMaster.heuristic(pos1,pos2) -- Manhattan heuristic
+-- Handles death of an entity
+function GameMaster.handleEntityDeath(entity)
+    print(entity.name, " HAS DIED.")
+    CollisionMatrix[entity.x][entity.y]=false
+    GM.entityManager:removeEntity(entity) -- 
+end
+
+function GameMaster.isGameOver()
+    return GM.player.isAlive()~=true
+end
+
+function GameMaster.displayHit(hit, damage, attacker_name, target_name)
+    if hit then
+        print(attacker_name, " hit ", target_name, " for ", damage, " points of damage!")
+    else
+        print(attacker_name, " missed...")
+    end
+end
+
+-- Bresenham line of sight
+function GameMaster:bresenhamLOS(pos1, pos2)
+    local x1,y1 = pos1.x, pos1.y
+    local x2,y2 = pos2.x, pos2.y
+    local dx = math.abs(x2 - x1)
+    local sx = x1 < x2 and 1 or (x1 > x2 and -1 or 0)
+    local dy = math.abs(y2 - y1)
+    local sy = y1 < y2 and 1 or (y1 > y2 and -1 or 0)
+    e = dx + dy
+
+    while true do
+        --print("Checking point:", x1, y1)
+        if GM.getTileAt("Walls", x1, y1) then
+            --print("Wall found at:", x1, y1)
+            return false  -- Line of sight is blocked
+        end
+        if x1==x2 and y1==y2 then
+            return true
+        end
+        e2 = 2*e
+        if e2>-dy then
+            e = e - dy
+            x1 = x1 + sx
+        end
+        if e2 < dx then
+            e = e + dx
+            y1 = y1 + sy
+        end
+    end
+end
+
+function GameMaster.heuristic(pos1,pos2) -- Manhattan distance
     local dx = math.abs(pos2.x - pos1.x)
     local dy = math.abs(pos2.y - pos1.y)
     return dx + dy
@@ -177,7 +284,7 @@ function GameMaster.nextMove(startPos, goal)
     local current = goal
     local next_move = nil
     while current do
-        print("CURRENT:", current.x, current.y)
+        --print("CURRENT:", current.x, current.y)
         local key = current.x .. "," .. current.y
         next_move = current
         current = came_from[key]

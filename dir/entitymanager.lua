@@ -44,6 +44,7 @@ function EntityManager:addEntity(entity)
 end
 
 function EntityManager:removeEntity(entity)
+    --print("We're removing ", entity.name, " at ", entity.x, entity.y)
     if self.useHashTable then
         local key = self:makeKey(entity.x,entity.y)
         self.world[key]=nil
@@ -55,6 +56,7 @@ function EntityManager:removeEntity(entity)
 end
 
 function EntityManager:moveEntity(entity, newX, newY)
+    --print("We're moving ", entity.name, " to ", entity.x, entity.y)
     if newX < 1 or newX > self.worldWidth or newY < 1 or newY > self.worldHeight then
         print("Out of bounds!")
         return false
@@ -104,10 +106,23 @@ function EntityManager:getNeighbors(x,y)
     return neighbors
 end
 
+function EntityManager:getEntitiesInRange(startX, startY, endX, endY)
+    local entities = {}
+    if self.useHashTable then
+        for key, entity in pairs(self.world) do
+            if entity.x >= startX and entity.x <= endX and
+            entity.y >= startY and entity.y <= endY then
+                table.insert(entities,entity)
+            end
+        end
+    end
+    return entities
+end
+
 function EntityManager:getAllEntities()
     local entities = {}
     if self.useHashTable then
-        for _, entity in pairs (Self.world) do
+        for _, entity in pairs (self.world) do
             table.insert(entities,entity)
         end
     else

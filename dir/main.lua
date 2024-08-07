@@ -22,12 +22,16 @@ function love.load()
     _G.map = sti('tilemap.lua')
     -- Player Setup
     player.load()
+    player.init({})
+    print(player.name)
     -- Gamemaster setup
     GM.initialize(true,16,16,_G.map,player)
     -- Entity Setup
     goblin = monster:new{name="goblin",y=1,x=5,sprite_path="/res/darkelf1.png"}
+    goblin2 = monster:new{name="elf",y=1,x=7,sprite_path="/res/elf1.png"}
     GM.addEntity(goblin)
     GM.initCollisionMatrix()
+    GM.addEntity(goblin2)
 end
 
 function love.update(dt)
@@ -69,8 +73,15 @@ end
  
 function love.draw()
     -- game rendering here
+
+    local startX = -GM.offsetX
+    local startY = -GM.offsetY
+    local endX = math.ceil((startX + _G.width*PIXEL_TO_TILE))
+    local endY = math.ceil((startY + _G.height*PIXEL_TO_TILE))
+    visibleEntities = GM.entityManager:getEntitiesInRange(startX, startY, endX, endY)
+
     _G.map:draw(GM.offsetX*TILE_SIZE,GM.offsetY*TILE_SIZE,scale,scale)
-    for _, entity in pairs(GM.entityManager.world) do
+    for _, entity in pairs(visibleEntities) do
         drawEntity(entity, false)
     end
     drawFog()
@@ -80,6 +91,7 @@ end
 
 function love.keypressed(key)
     -- handle input
+    print(GM.turn)
     print("--------------------------------------")
     local targetX, targetY = player:keypressed(key) -- screen coords
     if GM.canMove(targetX, targetY) then
@@ -106,12 +118,5 @@ function love.keypressed(key)
             GM.updateOffset(scrollX, scrollY)
         end
     end
-
-    print("Player COORDS", player.x, player.y)
-    local monster_pos = {x=goblin.x, y=goblin.y}
-    local player_pos = {x=player.x, y=player.y}
-    --print(GM.heuristic(monster_pos,player_pos))
-    local next_move = GM.nextMove(monster_pos, player_pos)
-    print("NEXT MOVE?!", next_move.x, next_move.y)
-    GM.moveEntity(goblin, next_move.x, next_move.y)
+    GM.nextTurn()
 end
