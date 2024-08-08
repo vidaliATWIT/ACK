@@ -19,19 +19,15 @@ function love.load()
     love.graphics.setDefaultFilter("nearest", "nearest", 1)
     -- Map Setup
     sti = require 'lib/sti'
-    _G.map = sti('tilemap.lua')
+    _G.map = sti('tilemap2.lua')
     -- Player Setup
     player.load()
-    player.init({})
+    player:init({x=1,y=3})
     print(player.name)
     -- Gamemaster setup
-    GM.initialize(true,16,16,_G.map,player)
+    GM.initialize(true,32,32,_G.map,player)
     -- Entity Setup
-    goblin = monster:new{name="goblin",y=1,x=5,sprite_path="/res/darkelf1.png"}
-    goblin2 = monster:new{name="elf",y=1,x=7,sprite_path="/res/elf1.png"}
-    GM.addEntity(goblin)
     GM.initCollisionMatrix()
-    GM.addEntity(goblin2)
 end
 
 function love.update(dt)

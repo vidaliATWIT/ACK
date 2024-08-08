@@ -14,7 +14,6 @@ local Enums = require("Enums")
 
 -- Controls all aspects of game logic and accesess map, player and entity locations on map
 function GameMaster.initialize(useHashTable, worldWidth, worldHeight, map, player)
-    GM.entityManager = EntityManager.new(useHashTable,worldWidth,worldHeight)
     GM.turn=0 -- Handles turns
     GM.round=0
     GM.offsetX=0
@@ -23,8 +22,8 @@ function GameMaster.initialize(useHashTable, worldWidth, worldHeight, map, playe
     _G.map = map
     _G.worldWidth=worldWidth or 16
     _G.worldHeight=worldHeight or 16
+    GM.entityManager = EntityManager.new(useHashTable,worldWidth,worldHeight, _G.map)
 end
-
 -- Initialize Collision Matrix with walls, entities and player
 function GameMaster.initCollisionMatrix()
     for x = 0, _G.worldWidth-1 do
@@ -50,7 +49,10 @@ function GameMaster.nextTurn()
     local entities = GM.entityManager:getAllEntities()
     local player_pos = {x=GM.player.x, y=GM.player.y}
     for _, entity in pairs(entities) do
-        GM.handleEntityTurn(entity)
+        if GM.heuristic(entity:getPosition(), player_pos) < 10 then
+            GM.handleEntityTurn(entity)
+            print(entity.name, " is being processed")
+        end
     end
     GM.turn=GM.turn+1
 end

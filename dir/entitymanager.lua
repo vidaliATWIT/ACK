@@ -1,13 +1,22 @@
+local monster = require("monster")
+local conf = require("conf")
+local scale = conf.scale_factor
+local TILE_SIZE = 16
+local PIXEL_TO_TILE = 1 / scale / TILE_SIZE
+local TILE_TO_PIXEL = TILE_SIZE * scale
 EntityManager = {}
 EntityManager.__index = EntityManager
 
+
 -- Manages our entities as an abstracted layer above our game-map
 -- Uses array for small maps, or a hashtable for larger ones
-function EntityManager.new(useHashTable, worldWidth, worldHeight)
+function EntityManager.new(useHashTable, worldWidth, worldHeight, mapData)
     local self = setmetatable({}, EntityManager)
     self.useHashTable = useHashTable
     self.worldWidth = worldWidth or 16
     self.worldHeight = worldHeight or 16
+    self.mapData = mapData
+    self.spawnPoints = {}
 
     if useHashTable then
         self.world = {} -- Hash Table
@@ -20,6 +29,8 @@ function EntityManager.new(useHashTable, worldWidth, worldHeight)
             end
         end
     end
+    self:parseSpawnPoints("MONSTER") -- set up spawn points
+    self:spawnMonsters()
     return self
 end
 
@@ -135,6 +146,38 @@ function EntityManager:getAllEntities()
         end
     end
     return entities
+end
+
+function EntityManager:spawnMonsters()
+    local monsterSpawnPoints = self:getSpawnPoints("MONSTER")
+    for _, spawnPoint in ipairs(monsterSpawnPoints) do
+        print(spawnPoint.monsterType)
+        local newMonster = monster:new(spawnPoint.monsterType, spawnPoint.x, spawnPoint.y)
+        print(newMonster.name, newMonster.x, newMonster.y)
+        self:addEntity(newMonster)
+    end
+end
+
+function EntityManager:parseSpawnPoints()
+    for _, object in ipairs(self.mapData.layers["SpawnPoints"].objects) do
+        print(object.x/TILE_SIZE, object.y/TILE_SIZE)
+        table.insert(self.spawnPoints, {
+            x=object.x/TILE_SIZE,
+            y=object.y/TILE_SIZE,
+            type=object.properties.Type,
+            monsterType=object.properties.MonsterType,
+        })
+    end
+end
+
+function EntityManager:getSpawnPoints(spawnType)
+    local points = {}
+    for _, point in ipairs(self.spawnPoints) do
+        if point.type==spawnType then
+            table.insert(points,point)
+        end
+    end
+    return points
 end
 
 return EntityManager

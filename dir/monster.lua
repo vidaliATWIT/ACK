@@ -3,19 +3,47 @@ local monster = setmetatable({}, {__index = Entity})
 local monster_dmg = {4, 6, 8, 10, 12, 12, 16, 18, 10, 22}
 local Dice = require("Dice")
 local Enums = require("Enums")
+
+local MonsterTemplates = {
+    GOBLIN = {
+        name = "Goblin",
+        image = "/res/darkelf1.png",
+        hd = 1,
+        monsterType="goblin",
+        awarenessCooldown=3
+    },
+    DARKELF = {
+        name = "Dark Elf",
+        image = "/res/elf1.png",
+        hd = 2,
+        monsterType="elf",
+        awarenessCooldown=4,
+    },
+}
+
 monster.__index = Monster
 
-function monster:new(o)
-    o = Entity:new(o)
+function monster:new(templateName, x, y)
+    local template=MonsterTemplates[templateName]
+    if not template then
+        error("Unknown monster template: " .. templateName)
+    end
+    local o = Entity:new({
+        x=x,
+        y=y,
+        type=Enums.EntityType.MONSTER,
+        name=template.name,
+        sprite_path=template.image,
+        hd=template.hd,
+        monsterType=template.monsterType,
+        maxAwarenessCooldown=template.awarenessCooldown
+    })
     setmetatable(o,self)
     self.__index=self
 
-    o.type=Enums.EntityType.MONSTER
-
-    o.x = o.x
-    o.y = o.y
-    o.armor = o.armor or 4
-    o.maxAwarenessCooldown=o.maxAwarenessCooldown or 3
+    o.max_hp=Dice.rollMultiple(o.hd, 8) -- Random roll to determine hp
+    o.hp=o.max_hp
+    o.armor = o.hd
     o.awareCooldown=o.maxAwarenessCooldown
 
     return o

@@ -27,6 +27,8 @@ function player:init(o)
     -- Character Stats
     player.name=o.name or "Manco"
     player.level = o.level or 1
+    player.x = o.x or player.x
+    player.y = o.y or player.y
     -- Base Stats
     player.speed=o.speed or 1
     player.max_hp=o.max_hp or 8

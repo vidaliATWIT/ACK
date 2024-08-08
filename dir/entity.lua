@@ -66,7 +66,7 @@ function Entity:getName()
 end
 
 function Entity:isAlive()
-    return self.hp~=0
+    return self.hp>0
 end
 
 return Entity
