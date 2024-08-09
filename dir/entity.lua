@@ -22,7 +22,7 @@ function Entity:new(o)
     o.hd = o.hd or 5
     o.attack_range=o.attack_range or 5
     o.state=Enums.EntityState.IDLE
-    o.type=nil -- no type for a typeless being
+    o.type=o.type or nil -- no type for a typeless being
 
     o.lastKnownPlayerPos=nil
     

@@ -83,6 +83,7 @@ function love.draw()
     drawFog()
     --love.graphics.draw(player.image,player.x*TILE_TO_PIXEL, player.y*TILE_TO_PIXEL, 0, scale, scale)
     drawEntity(player,true)
+    GM.UI:draw()
 end
 
 function love.keypressed(key)

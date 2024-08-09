@@ -4,6 +4,9 @@ Enums.EntityState = {
     IDLE="IDLE",
     AWARE="AWARE",
     ATTACK="ATTACK",
+    ATTEND="ATTENDING", --NPC ONLY
+    TRAINING="TRAINING", --NPC ONLY
+    QUESTOFFERED="QUESTOFFERED", --NPC ONLY
 }
 
 Enums.EntityType = {

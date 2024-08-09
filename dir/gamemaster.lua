@@ -11,6 +11,7 @@ local PIXEL_TO_TILE = 1 / scale / TILE_SIZE
 local TILE_TO_PIXEL = TILE_SIZE * scale -- also pixel size at current screen resolution
 local CollisionMatrix = {} -- representation of the map with entities, player, and walls
 local Enums = require("Enums")
+local UI = require("UI")
 
 -- Controls all aspects of game logic and accesess map, player and entity locations on map
 function GameMaster.initialize(useHashTable, worldWidth, worldHeight, map, player)
@@ -23,6 +24,7 @@ function GameMaster.initialize(useHashTable, worldWidth, worldHeight, map, playe
     _G.worldWidth=worldWidth or 16
     _G.worldHeight=worldHeight or 16
     GM.entityManager = EntityManager.new(useHashTable,worldWidth,worldHeight, _G.map)
+    GM.UI=UI
 end
 -- Initialize Collision Matrix with walls, entities and player
 function GameMaster.initCollisionMatrix()
@@ -46,12 +48,13 @@ end
 
 -- Called by move handles all entities in visible world
 function GameMaster.nextTurn()
+    -- clear dialog bubbles
     local entities = GM.entityManager:getAllEntities()
     local player_pos = {x=GM.player.x, y=GM.player.y}
     for _, entity in pairs(entities) do
         if GM.heuristic(entity:getPosition(), player_pos) < 10 then
             GM.handleEntityTurn(entity)
-            print(entity.name, " is being processed")
+            --print(entity.name, " is being processed")
         end
     end
     GM.turn=GM.turn+1
@@ -61,26 +64,30 @@ end
 function GameMaster.handleEntityTurn(entity)
     local next_move = nil
     print("Entity name and state: ", entity.name, entity.state)
-    GM.handleStateTransition(entity)
+    print(entity.type)
+    if (entity.type==Enums.EntityType.MONSTER) then
+        GM.handleStateTransition(entity)
 
-    if entity.state==Enums.EntityState.IDLE then -- IDLE
-        if entity.type==Enums.EntityType.MONSTER then
-            next_move = entity:getIdleDirection()
+        if entity.state==Enums.EntityState.IDLE then -- IDLE
+            if entity.type==Enums.EntityType.MONSTER then
+                next_move = entity:getIdleDirection()
+                GM.moveEntity(entity, next_move.x, next_move.y)
+            end
+        elseif entity.state==Enums.EntityState.AWARE then -- AWARE AND SEARCHING
+            if (entity.awareCooldown>0) then
+                next_move = GM.nextMove(entity:getPosition(), entity.lastKnownPlayerPos)
+                entity:decrementCooldown()
+            end
+        elseif entity.state==Enums.EntityState.ATTACK then -- ATTACKING
+            next_move = GM.nextMove(entity:getPosition(), GM.player:getPosition())
+        else
+            entity.state=Enums.EntityState.IDLE
+        end
+        if next_move then
             GM.moveEntity(entity, next_move.x, next_move.y)
         end
-    elseif entity.state==Enums.EntityState.AWARE then -- AWARE AND SEARCHING
-        if (entity.awareCooldown>0) then
-            next_move = GM.nextMove(entity:getPosition(), entity.lastKnownPlayerPos)
-            entity:decrementCooldown()
-        end
-    elseif entity.state==Enums.EntityState.ATTACK then -- ATTACKING
-        next_move = GM.nextMove(entity:getPosition(), GM.player:getPosition())
-    else
-        entity.state=Enums.EntityState.IDLE
     end
-    if next_move then
-        GM.moveEntity(entity, next_move.x, next_move.y)
-    end
+    
 end
 
 -- Helper function to encapsulate handling states
@@ -104,6 +111,7 @@ end
 
 -- Handles player move
 function GameMaster.canMove(x,y)
+    UI:setDialogLine("")
     if true then
         -- check if where you're moving to is walkable
         local floor = GM.getTileAt("Floor",x,y)
@@ -139,13 +147,13 @@ function GameMaster.handleInteraction(entity, player)
     local interaction = entity:interact(player)
     if interaction.type=="combat" then
         local hit, damage = interaction.result.hit, interaction.result.damage
-        print(entity.name, " HP: ", entity.hp)
+        --print(entity.name, " HP: ", entity.hp)
         GM.displayHit(hit, damage, GM.player.name, entity.name)
         if entity:isAlive()==false then
             GM.handleEntityDeath(entity)
         end
-    elseif interaction.type=="dialogue" then
-    else
+    elseif interaction.type=="dialog" then
+        GM.displayDialog(entity.name, interaction.result)
     end
 end
 
@@ -170,7 +178,8 @@ end
 
 -- Handles death of an entity
 function GameMaster.handleEntityDeath(entity)
-    print(entity.name, " HAS DIED.")
+    local message = string.format("%s perished.", entity.name)
+    UI:addCombatMessage(message)
     CollisionMatrix[entity.x][entity.y]=false
     GM.entityManager:removeEntity(entity) -- 
 end
@@ -180,11 +189,19 @@ function GameMaster.isGameOver()
 end
 
 function GameMaster.displayHit(hit, damage, attacker_name, target_name)
+    local message
     if hit then
-        print(attacker_name, " hit ", target_name, " for ", damage, " points of damage!")
+        message = string.format("%s hit %s for %d points of damage!", attacker_name, target_name, damage)
     else
-        print(attacker_name, " missed...")
+        message = string.format("%s missed...", attacker_name)
     end
+    UI:addCombatMessage(message)
+end
+
+function GameMaster.displayDialog(npc_name, dialog)
+    local line = string.format("%s: %s",npc_name, dialog)
+    print(line)
+    UI:setDialogLine(line)
 end
 
 -- Bresenham line of sight

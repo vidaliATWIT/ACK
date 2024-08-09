@@ -1,4 +1,5 @@
 local monster = require("monster")
+local npc = require("npc")
 local conf = require("conf")
 local scale = conf.scale_factor
 local TILE_SIZE = 16
@@ -29,8 +30,9 @@ function EntityManager.new(useHashTable, worldWidth, worldHeight, mapData)
             end
         end
     end
-    self:parseSpawnPoints("MONSTER") -- set up spawn points
+    self:parseSpawnPoints() -- set up spawn points
     self:spawnMonsters()
+    self:spawnNPCs()
     return self
 end
 
@@ -151,10 +153,20 @@ end
 function EntityManager:spawnMonsters()
     local monsterSpawnPoints = self:getSpawnPoints("MONSTER")
     for _, spawnPoint in ipairs(monsterSpawnPoints) do
-        print(spawnPoint.monsterType)
-        local newMonster = monster:new(spawnPoint.monsterType, spawnPoint.x, spawnPoint.y)
+        print(spawnPoint.subType)
+        local newMonster = monster:new(spawnPoint.subType, spawnPoint.x, spawnPoint.y)
         print(newMonster.name, newMonster.x, newMonster.y)
         self:addEntity(newMonster)
+    end
+end
+
+function EntityManager:spawnNPCs()
+    local NPCSpawnPoints = self:getSpawnPoints("NPC")
+    for _, spawnPoint in ipairs(NPCSpawnPoints) do
+        print(spawnPoint.subType)
+        local newNPC = npc:new(spawnPoint.subType, spawnPoint.name, spawnPoint.x, spawnPoint.y)
+        print(newNPC.name, newNPC.x, newNPC.y)
+        self:addEntity(newNPC)
     end
 end
 
@@ -165,7 +177,8 @@ function EntityManager:parseSpawnPoints()
             x=object.x/TILE_SIZE,
             y=object.y/TILE_SIZE,
             type=object.properties.Type,
-            monsterType=object.properties.MonsterType,
+            subType=object.properties.SubType,
+            name=object.properties.Name or "None"
         })
     end
 end
@@ -174,6 +187,7 @@ function EntityManager:getSpawnPoints(spawnType)
     local points = {}
     for _, point in ipairs(self.spawnPoints) do
         if point.type==spawnType then
+            print(spawnType)
             table.insert(points,point)
         end
     end

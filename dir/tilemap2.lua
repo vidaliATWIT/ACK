@@ -10,7 +10,7 @@ return {
   tilewidth = 16,
   tileheight = 16,
   nextlayerid = 5,
-  nextobjectid = 12,
+  nextobjectid = 14,
   properties = {},
   tilesets = {
     {
@@ -196,14 +196,14 @@ return {
           name = "",
           type = "",
           shape = "point",
-          x = 256,
-          y = 16,
+          x = 384,
+          y = 32,
           width = 0,
           height = 0,
           rotation = 0,
-          visible = true,
+          visible = false,
           properties = {
-            ["MonsterType"] = "GOBLIN",
+            ["SubType"] = "GOBLIN",
             ["Type"] = "MONSTER"
           }
         },
@@ -217,9 +217,9 @@ return {
           width = 0,
           height = 0,
           rotation = 0,
-          visible = true,
+          visible = false,
           properties = {
-            ["MonsterType"] = "GOBLIN",
+            ["SubType"] = "GOBLIN",
             ["Type"] = "MONSTER"
           }
         },
@@ -233,9 +233,9 @@ return {
           width = 0,
           height = 0,
           rotation = 0,
-          visible = true,
+          visible = false,
           properties = {
-            ["MonsterType"] = "GOBLIN",
+            ["SubType"] = "GOBLIN",
             ["Type"] = "MONSTER"
           }
         },
@@ -249,9 +249,9 @@ return {
           width = 0,
           height = 0,
           rotation = 0,
-          visible = true,
+          visible = false,
           properties = {
-            ["MonsterType"] = "DARKELF",
+            ["SubType"] = "DARKELF",
             ["Type"] = "MONSTER"
           }
         },
@@ -265,10 +265,44 @@ return {
           width = 0,
           height = 0,
           rotation = 0,
-          visible = true,
+          visible = false,
           properties = {
-            ["MonsterType"] = "GOBLIN",
+            ["SubType"] = "GOBLIN",
             ["Type"] = "MONSTER"
+          }
+        },
+        {
+          id = 12,
+          name = "",
+          type = "",
+          shape = "point",
+          x = 96,
+          y = 64,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = false,
+          properties = {
+            ["Name"] = "Lea",
+            ["SubType"] = "MOOK",
+            ["Type"] = "NPC"
+          }
+        },
+        {
+          id = 13,
+          name = "",
+          type = "",
+          shape = "point",
+          x = 96,
+          y = 240,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = false,
+          properties = {
+            ["Name"] = "Aimee",
+            ["SubType"] = "TRAINER",
+            ["Type"] = "NPC"
           }
         }
       }
