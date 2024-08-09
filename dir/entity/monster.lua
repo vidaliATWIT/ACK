@@ -1,8 +1,8 @@
-local Entity = require("Entity")
+local Entity = require("entity.Entity")
 local monster = setmetatable({}, {__index = Entity})
 local monster_dmg = {4, 6, 8, 10, 12, 12, 16, 18, 10, 22}
-local Dice = require("Dice")
-local Enums = require("Enums")
+local Dice = require("util.Dice")
+local Enums = require("util.Enums")
 
 local MonsterTemplates = {
     GOBLIN = {

@@ -1,6 +1,6 @@
-local monster = require("monster")
-local npc = require("npc")
-local conf = require("conf")
+local monster = require("entity.monster")
+local npc = require("entity.npc")
+local conf = require("util.conf")
 local scale = conf.scale_factor
 local TILE_SIZE = 16
 local PIXEL_TO_TILE = 1 / scale / TILE_SIZE

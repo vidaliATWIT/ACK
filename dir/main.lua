@@ -1,14 +1,13 @@
 local player = require("player")
-local conf = require("conf")
-local monster = require("monster")
-local GM = require("GameMaster")
+local conf = require("util.conf")
+local monster = require("entity.monster")
+local GM = require("managers.GameMaster")
 local scale = conf.scale_factor
 local TILE_SIZE = 16
 local PIXEL_TO_TILE = 1 / scale / TILE_SIZE
 local TILE_TO_PIXEL = TILE_SIZE * scale
 local UI = require("UI")
-local GameState=require("gameState")
-local DialogManager=require("DialogManager")
+
 
 function love.load()
     -- Screen Setup
@@ -92,41 +91,55 @@ end
 function love.keypressed(key)
     -- handle input
     --print(GM.turn)
-    print("--------------------------------------")
-    local targetX, targetY = player:keypressed(key) -- screen coords
-    if (GM.UI.isShowingDialog) then
-        local choice = tonumber(key)
-        if choice and choice <= #GM.UI.dialogOptions then
-            GM.handleDialogChoice(choice)
-        elseif key == "escape" then
-            DialogManager:endDialog()
-            GM.UI:hideDialog()
-        end
-    else
-        if GM.canMove(targetX, targetY) then
-            player:move()
-
-            local newScreenX = (player.x + GM.offsetX) * TILE_TO_PIXEL
-            local newScreenY = (player.y + GM.offsetY) * TILE_TO_PIXEL
-            
-            local scrollX, scrollY = 0, 0
-            
-            if newScreenX < TILE_TO_PIXEL then
-                scrollX = 1
-            elseif newScreenX > _G.width - 2 * TILE_TO_PIXEL then
-                scrollX = -1
-            end
-            
-            if newScreenY < TILE_TO_PIXEL then
-                scrollY = 1
-            elseif newScreenY > _G.height - 2 * TILE_TO_PIXEL then
-                scrollY = -1
-            end
-            
-            if scrollX ~= 0 or scrollY ~= 0 then
-                GM.updateOffset(scrollX, scrollY)
-            end
-        end
-        GM.nextTurn()
+    if GM.GameState.get()=="DIALOG" then
+        handleDialogInput(key)
+    elseif GM.GameState.get()=="EXPLORING" then
+        handleExplorationInput(key)
     end
 end
+
+function handleDialogInput(key)
+    local choice = tonumber(key)
+    if choice and choice <= #GM.UI.dialogOptions then
+        GM.handleDialogChoice(choice)
+    elseif key == "escape" then
+        --GM.DialogManager:endDialog()
+        --GM.UI:hideDialog()
+    end
+end
+
+function handleExplorationInput(key)
+    print("--------------------------------------")
+    local targetX, targetY = player:keypressed(key) -- screen coords
+
+    if GM.canMove(targetX, targetY) then
+        player:move()
+        handleScrolling()
+    end
+    GM.nextTurn()
+end
+
+function handleScrolling()
+    local newScreenX = (player.x + GM.offsetX) * TILE_TO_PIXEL
+    local newScreenY = (player.y + GM.offsetY) * TILE_TO_PIXEL
+        
+    local scrollX, scrollY = 0, 0
+        
+    if newScreenX < TILE_TO_PIXEL then
+        scrollX = 1
+    elseif newScreenX > _G.width - 2 * TILE_TO_PIXEL then
+        scrollX = -1
+    end
+        
+    if newScreenY < TILE_TO_PIXEL then
+        scrollY = 1
+    elseif newScreenY > _G.height - 2 * TILE_TO_PIXEL then
+        scrollY = -1
+    end
+        
+    if scrollX ~= 0 or scrollY ~= 0 then
+        GM.updateOffset(scrollX, scrollY)
+    end
+end
+   
+

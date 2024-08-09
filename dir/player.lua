@@ -1,8 +1,8 @@
 -- Define player table
 local player = {}
-local config = require("conf")
+local config = require("util.conf")
 local scale = config.scale_factor
-local Dice = require("Dice")
+local Dice = require("util.Dice")
 local Bonuses = {}
 
 

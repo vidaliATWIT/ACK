@@ -1,5 +1,3 @@
-local monster = require("monster")
-
 local MonsterTemplates = {
     goblin = {
         name = "Goblin",

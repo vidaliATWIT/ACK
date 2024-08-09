@@ -1,18 +1,18 @@
-local EntityManager = require("EntityManager")
-local conf = require("conf")
+local EntityManager = require("managers.EntityManager")
+local conf = require("util.conf")
 local GameMaster = {}
 local GM = {} -- using prototypes to make this easier to read
 setmetatable(GM, {__index = GameMaster})
-local Node = require("Node") -- Used for A*
-local PriorityQueue = require("lib/PriorityQueue")
+local PriorityQueue = require("lib.PriorityQueue")
 local scale = conf.scale_factor
 local TILE_SIZE = 16
 local PIXEL_TO_TILE = 1 / scale / TILE_SIZE
 local TILE_TO_PIXEL = TILE_SIZE * scale -- also pixel size at current screen resolution
 local CollisionMatrix = {} -- representation of the map with entities, player, and walls
-local Enums = require("Enums")
+local Enums = require("util.Enums")
 local UI = require("UI")
-local DialogManager = require("DialogManager")
+local DialogManager = require("managers.DialogManager")
+local GameState = require("managers.gameState")
 
 -- Controls all aspects of game logic and accesess map, player and entity locations on map
 function GameMaster.initialize(useHashTable, worldWidth, worldHeight, map, player)
@@ -26,6 +26,7 @@ function GameMaster.initialize(useHashTable, worldWidth, worldHeight, map, playe
     _G.worldHeight=worldHeight or 16
     GM.entityManager = EntityManager.new(useHashTable,worldWidth,worldHeight, _G.map)
     GM.UI=UI
+    GM.GameState=GameState
 end
 -- Initialize Collision Matrix with walls, entities and player
 function GameMaster.initCollisionMatrix()
@@ -155,6 +156,7 @@ function GameMaster.handleInteraction(entity, player)
     elseif interaction.type=="dialog" then
         DialogManager:startDialog(entity)
         GM.displayDialog()
+        GM.GameState.set("DIALOG")
     end
 end
 
@@ -211,6 +213,7 @@ function GameMaster.handleDialogChoice(optionIndex)
     if dialogContinues then
         GM.displayDialog()
     else
+        GameState.set("EXPLORING")
         DialogManager:endDialog()
         UI:hideDialog()
     end
