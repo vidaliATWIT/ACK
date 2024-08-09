@@ -3,7 +3,7 @@ local npc = setmetatable({}, {__index = Entity})
 local npc_dmg = {4, 6, 8, 10, 12, 12, 16, 18, 10, 22}
 local Dice = require("Dice")
 local Enums = require("Enums")
-
+local NPCDialogTrees = require("dialogTrees")
 
 local NPCTemplates = {
     MOOK = { -- TALKERS & YAPPERS
@@ -24,16 +24,6 @@ local NPCTemplates = {
     },
 }
 
-local NPCDialogTrees = {
-    Aimee = {
-        greeting="Hello. I am unimportant in this world.",
-        exit="Goodbye now."
-    },
-    Lea = {
-        greeting="Hello stranger. I can teach you, but I have to charge.",
-        exit="Be seeing you stranger."
-    }
-}
 
 npc.__index = npc
 
@@ -54,17 +44,10 @@ function npc:new(templateName, name, x, y)
     })
     setmetatable(o,self)
     self.__index=self
-
-    print(NPCDialogTrees)
-    o.dialogTemplate=NPCDialogTrees[o.name]
-    print(o.dialogTemplate)
-
     o.max_hp=o.hd*8 -- NPCs have max health for their level
     o.hp=o.max_hp
     o.armor = o.hd
     o.awareCooldown=o.maxAwarenessCooldown
-    o.dialog=o.dialogTemplate["greeting"]
-
     return o
 end
 
@@ -142,10 +125,9 @@ function npc:interact(agent)
         }
     end
     if self.state==Enums.EntityState.IDLE then
-        print(self.dialog)
         return {
             type="dialog",
-            result=self.dialog
+            result="DUMMY."
         }
     end
 end

@@ -12,6 +12,7 @@ local TILE_TO_PIXEL = TILE_SIZE * scale -- also pixel size at current screen res
 local CollisionMatrix = {} -- representation of the map with entities, player, and walls
 local Enums = require("Enums")
 local UI = require("UI")
+local DialogManager = require("DialogManager")
 
 -- Controls all aspects of game logic and accesess map, player and entity locations on map
 function GameMaster.initialize(useHashTable, worldWidth, worldHeight, map, player)
@@ -111,7 +112,6 @@ end
 
 -- Handles player move
 function GameMaster.canMove(x,y)
-    UI:setDialogLine("")
     if true then
         -- check if where you're moving to is walkable
         local floor = GM.getTileAt("Floor",x,y)
@@ -153,7 +153,8 @@ function GameMaster.handleInteraction(entity, player)
             GM.handleEntityDeath(entity)
         end
     elseif interaction.type=="dialog" then
-        GM.displayDialog(entity.name, interaction.result)
+        DialogManager:startDialog(entity)
+        GM.displayDialog()
     end
 end
 
@@ -199,10 +200,22 @@ function GameMaster.displayHit(hit, damage, attacker_name, target_name)
 end
 
 function GameMaster.displayDialog(npc_name, dialog)
-    local line = string.format("%s: %s",npc_name, dialog)
-    print(line)
-    UI:setDialogLine(line)
+    local dialogText=DialogManager:getCurrentText()
+    local options=DialogManager:getOptions()
+
+    UI:showDialog(dialogText,options)
 end
+
+function GameMaster.handleDialogChoice(optionIndex)
+    local dialogContinues = DialogManager:choose(optionIndex)
+    if dialogContinues then
+        GM.displayDialog()
+    else
+        DialogManager:endDialog()
+        UI:hideDialog()
+    end
+end
+
 
 -- Bresenham line of sight
 function GameMaster:bresenhamLOS(pos1, pos2)

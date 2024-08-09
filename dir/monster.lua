@@ -40,6 +40,7 @@ function monster:new(templateName, x, y)
     })
     setmetatable(o,self)
     self.__index=self
+    print(o.type)
 
     o.max_hp=Dice.rollMultiple(o.hd, 8) -- Random roll to determine hp
     o.hp=o.max_hp

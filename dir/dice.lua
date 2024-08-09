@@ -1,5 +1,6 @@
 Dice = {}
 
+
 function Dice.roll(sides)
     return math.random(1,sides)
 end
