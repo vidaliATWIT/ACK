@@ -1,5 +1,8 @@
 -- Define player table
-local player = {}
+local player = {
+    metNPCs={},
+    quests={},
+}
 local config = require("util.conf")
 local scale = config.scale_factor
 local Dice = require("util.Dice")
@@ -108,6 +111,23 @@ function player:takeDamage(amount)
     player.hp = player.hp-amount
 end
 
+function player:hasMetNPC(npcName)
+    print("HAVE MET?")
+    return player.metNPCs[npcName] or false
+end
+
+function player:meetNPC(npcName)
+    player.metNPCs[npcName] = true
+end
+
+function player:getQuestStatus(questName)
+    return player.quests[questName] or "not_started"
+end
+
+function player:updateQuestStatus(questName, status)
+    player.quests[questName]=status
+end
+
 function player:isAlive()
     return player.hp>0
 end
@@ -136,7 +156,7 @@ function player:setForce(force)
     player.force=force
 end
 
-function player:setForce(finesse)
+function player:setFinesse(finesse)
     player.finesse=finesse
 end
 

@@ -154,6 +154,7 @@ function GameMaster.handleInteraction(entity, player)
             GM.handleEntityDeath(entity)
         end
     elseif interaction.type=="dialog" then
+        print("dialog happening")
         DialogManager:startDialog(entity)
         GM.displayDialog()
         GM.GameState.set("DIALOG")
@@ -202,6 +203,7 @@ function GameMaster.displayHit(hit, damage, attacker_name, target_name)
 end
 
 function GameMaster.displayDialog(npc_name, dialog)
+    print("OUR DIALOG TEXT IS : ", DialogManager:getCurrentText())
     local dialogText=DialogManager:getCurrentText()
     local options=DialogManager:getOptions()
 

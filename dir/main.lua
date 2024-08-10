@@ -24,7 +24,7 @@ function love.load()
     _G.map = sti('tilemap2.lua')
     -- Player Setup
     player.load()
-    player:init({x=1,y=3})
+    player:init({x=1,y=8})
     print(player.name)
     -- Gamemaster setup
     GM.initialize(true,32,32,_G.map,player)

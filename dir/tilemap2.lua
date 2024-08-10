@@ -201,7 +201,7 @@ return {
           width = 0,
           height = 0,
           rotation = 0,
-          visible = false,
+          visible = true,
           properties = {
             ["SubType"] = "GOBLIN",
             ["Type"] = "MONSTER"
@@ -217,7 +217,7 @@ return {
           width = 0,
           height = 0,
           rotation = 0,
-          visible = false,
+          visible = true,
           properties = {
             ["SubType"] = "GOBLIN",
             ["Type"] = "MONSTER"
@@ -233,7 +233,7 @@ return {
           width = 0,
           height = 0,
           rotation = 0,
-          visible = false,
+          visible = true,
           properties = {
             ["SubType"] = "GOBLIN",
             ["Type"] = "MONSTER"
@@ -249,7 +249,7 @@ return {
           width = 0,
           height = 0,
           rotation = 0,
-          visible = false,
+          visible = true,
           properties = {
             ["SubType"] = "DARKELF",
             ["Type"] = "MONSTER"
@@ -265,7 +265,7 @@ return {
           width = 0,
           height = 0,
           rotation = 0,
-          visible = false,
+          visible = true,
           properties = {
             ["SubType"] = "GOBLIN",
             ["Type"] = "MONSTER"
@@ -277,11 +277,11 @@ return {
           type = "",
           shape = "point",
           x = 96,
-          y = 64,
+          y = 240,
           width = 0,
           height = 0,
           rotation = 0,
-          visible = false,
+          visible = true,
           properties = {
             ["Name"] = "Lea",
             ["SubType"] = "MOOK",
@@ -294,11 +294,11 @@ return {
           type = "",
           shape = "point",
           x = 96,
-          y = 240,
+          y = 64,
           width = 0,
           height = 0,
           rotation = 0,
-          visible = false,
+          visible = true,
           properties = {
             ["Name"] = "Aimee",
             ["SubType"] = "TRAINER",
