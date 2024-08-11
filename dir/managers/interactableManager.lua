@@ -3,6 +3,7 @@ local scale = conf.scale_factor
 local TILE_SIZE = 16
 local PIXEL_TO_TILE = 1 / scale / TILE_SIZE
 local TILE_TO_PIXEL = TILE_SIZE * scale
+local ItemManager = require("managers/ItemManager")
 
 InteractableManager = {}
 
@@ -44,6 +45,8 @@ end
 function InteractableManager:tryUnlockDoor(player, door)
     if door and door.type=="DOOR" and door.locked then
         local requiredKey = door.color
+        print("COLOR: ".. door.color)
+        print("PLAYER KEYS: " .. player.inventory.keys[requiredKey])
         if player.inventory.keys[requiredKey] and player.inventory.keys[requiredKey] > 0 then
             door.locked=false
             player.inventory.keys[requiredKey] = player.inventory.keys[requiredKey]-1
@@ -70,16 +73,23 @@ function InteractableManager:openChest(player,chest)
         local contents = parseContents(chest.contents)
         local itemsCollected = {}
         for itemName,count in pairs(contents) do
-            if itemName=="gold" then
+
+            if itemName=="gold" then -- Add gold, and stack em high
                 player:addGold(count)
                 table.insert(itemsCollected,count.." gold")
-            elseif itemName:find("key") then
+            elseif itemName:find("key") then -- Add key and stack em high
                 local keyColor = itemName:match("(%w+)_key")
-                player:addItem("key",keyColor,count)
+                player:addKey(keyColor)
                 table.insert(itemsCollected, count .. " " ..  keyColor .. " key(s)")
             else
-                player:addItem("item", itemName,count)
-                table.insert(itemsCollected,count .. " " .. itemName)
+                local itemDef = ItemManager:getItem(itemName) -- Add items (swords, armor, etc) and don't stack em high...
+                if itemDef then
+                    if player:addItem(itemName, itemDef) then
+                        table.insert(itemsCollected, itemDef.name)
+                    else
+                        table.insert(itemsCollected, "Couldn't pick up " .. itemDef.name .. " (inventory full)")
+                    end
+                end
             end
         end
         chest.opened = true

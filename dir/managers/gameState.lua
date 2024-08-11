@@ -1,6 +1,7 @@
 local GameState = {
     EXPLORING="EXPLORING",
     DIALOG="DIALOG",
+    INVENTORY="INVENTORY",
     current="EXPLORING"
 }
 

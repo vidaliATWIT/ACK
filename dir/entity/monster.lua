@@ -44,7 +44,7 @@ function monster:new(templateName, x, y)
 
     o.max_hp=Dice.rollMultiple(o.hd, 8) -- Random roll to determine hp
     o.hp=o.max_hp
-    o.armor = o.hd
+    o.defense = o.hd
     o.awareCooldown=o.maxAwarenessCooldown
 
     return o
@@ -108,7 +108,7 @@ function monster:attack(player)
     if Dice.rollUnder(player.finesse) then
         local baseDmg = monster_dmg[self.hd]
         local rawDamage = Dice.roll(baseDmg)
-        local finalDamage = math.max(0, rawDamage-player.armor)
+        local finalDamage = math.max(0, rawDamage-player.defense)
         player:takeDamage(finalDamage)
         return true, finalDamage
     end

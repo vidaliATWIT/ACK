@@ -95,6 +95,8 @@ function love.keypressed(key)
         handleDialogInput(key)
     elseif GM.GameState.get()=="EXPLORING" then
         handleExplorationInput(key)
+    elseif GM.GameState.get()=="INVENTORY" then
+        handleInventoryInput(key)
     end
 end
 
@@ -110,6 +112,11 @@ end
 
 function handleExplorationInput(key)
     print("--------------------------------------")
+    if key=='i' then
+        GM.GameState.set("INVENTORY")
+        UI:showInventory(player:getInventory())
+    end
+
     local targetX, targetY = player:keypressed(key) -- screen coords
 
     if GM.canMove(targetX, targetY) then
@@ -117,6 +124,20 @@ function handleExplorationInput(key)
         handleScrolling()
     end
     GM.nextTurn()
+end
+
+function handleInventoryInput(key)
+    if key == "escape" then
+        GM.UI:hideInventory()
+        GM.GameState.set("EXPLORING")
+    elseif tonumber(key) then
+        local choice = tonumber(key)
+        print(choice)
+        message = player:useItem(choice)
+        UI:addCombatMessage(message)
+        GM.UI:hideInventory()
+        GM.GameState.set("EXPLORING")
+    end
 end
 
 function handleScrolling()
