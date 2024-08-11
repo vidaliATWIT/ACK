@@ -12,6 +12,7 @@ local CollisionMatrix = {} -- representation of the map with entities, player, a
 local Enums = require("util.Enums")
 local UI = require("UI")
 local DialogManager = require("managers.DialogManager")
+local InteractableManager = require("managers.InteractableManager")
 local GameState = require("managers.gameState")
 
 -- Controls all aspects of game logic and accesess map, player and entity locations on map
@@ -24,7 +25,8 @@ function GameMaster.initialize(useHashTable, worldWidth, worldHeight, map, playe
     _G.map = map
     _G.worldWidth=worldWidth or 16
     _G.worldHeight=worldHeight or 16
-    GM.entityManager = EntityManager.new(useHashTable,worldWidth,worldHeight, _G.map)
+    GM.entityManager = EntityManager.new(useHashTable,worldWidth,worldHeight, _G.map) -- init entity manager
+    GM.interactableManager = InteractableManager:new(_G.map) -- init interact manager
     GM.UI=UI
     GM.GameState=GameState
 end
@@ -117,6 +119,11 @@ function GameMaster.canMove(x,y)
         -- check if where you're moving to is walkable
         local floor = GM.getTileAt("Floor",x,y)
         local entity = GM.entityManager:getEntityAt(x, y)
+        local object = GM.interactableManager:getObjectAt(x,y)
+        if object ~= nil then
+            local objectOpen = GM.interactableManager:handleInteraction(GM.player,object)
+            return objectOpen
+        end
         if entity~=nil then
             GM.handleInteraction(entity, GM.player)
         end

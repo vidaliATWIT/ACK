@@ -153,9 +153,9 @@ end
 function EntityManager:spawnMonsters()
     local monsterSpawnPoints = self:getSpawnPoints("MONSTER")
     for _, spawnPoint in ipairs(monsterSpawnPoints) do
-        print(spawnPoint.subType)
+        --print(spawnPoint.subType)
         local newMonster = monster:new(spawnPoint.subType, spawnPoint.x, spawnPoint.y)
-        print(newMonster.name, newMonster.x, newMonster.y)
+        --print(newMonster.name, newMonster.x, newMonster.y)
         self:addEntity(newMonster)
     end
 end
@@ -163,13 +163,14 @@ end
 function EntityManager:spawnNPCs()
     local NPCSpawnPoints = self:getSpawnPoints("NPC")
     for _, spawnPoint in ipairs(NPCSpawnPoints) do
-        print(spawnPoint.subType)
+        --print(spawnPoint.subType)
         local newNPC = npc:new(spawnPoint.subType, spawnPoint.name, spawnPoint.x, spawnPoint.y)
-        print(newNPC.name, newNPC.x, newNPC.y)
+        --print(newNPC.name, newNPC.x, newNPC.y)
         self:addEntity(newNPC)
     end
 end
 
+-- Iterate through map data to spawn entities
 function EntityManager:parseSpawnPoints()
     for _, object in ipairs(self.mapData.layers["SpawnPoints"].objects) do
         print(object.x/TILE_SIZE, object.y/TILE_SIZE)
@@ -187,7 +188,7 @@ function EntityManager:getSpawnPoints(spawnType)
     local points = {}
     for _, point in ipairs(self.spawnPoints) do
         if point.type==spawnType then
-            print(spawnType)
+            --print(spawnType)
             table.insert(points,point)
         end
     end

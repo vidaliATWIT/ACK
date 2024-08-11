@@ -2,6 +2,16 @@
 local player = {
     metNPCs={},
     quests={},
+    inventory={
+        keys = {
+            red=0,
+            blue=0,
+            green=0,
+            gold=0,
+        },
+        items={},
+        gold=0
+    }
 }
 local config = require("util.conf")
 local scale = config.scale_factor
@@ -95,6 +105,47 @@ function player:attack(entity)
     return false, 0
 end
 
+function player:addItem(itemType,itemName,count)
+    local count = count or 1
+    if itemType == "key" then
+        self.inventory.keys[itemName] = (self.inventory.keys[itemName] or 0) + count
+    else
+        self.inventory.items[itemName] = (self.inventory.items[itemName] or 0) + count
+    end
+end
+
+function player:removeItem(itemType,itemName,count)
+    local count = count or 1
+    if itemType == "key" then
+        self.inventory.keys[itemName] = math.max(0, (self.inventory.keys[itemName] or 0) - count)
+    else
+        self.inventory.items[itemName] = math.max(0, (self.inventory.items[itemName] or 0) - count)
+    end
+end
+
+function player:addGold(count)
+    self.inventory.gold = (self.inventory.gold or 0) + count 
+end
+
+function player:removeGold(count)
+    self.inventory.gold = math.max(0, (self.inventory.gold or 0) - count)
+end
+
+-- Parses through inventory and returns string
+function player:getInventory()
+    local inventoryTable = {}
+    for name,count in pairs(self.inventory.items) do
+        table.insert(inventoryTable,name .. " " .. count)
+    end
+    for color,count in pairs(self.inventory.keys) do
+        if count>0 then
+            table.insert(inventoryTable,color .. " key " .. count)
+        end
+    end
+    table.insert(inventoryTable, self.inventory.gold .. " gold pieces")
+    inventoryString=table.concat(inventoryTable, ",")
+    return inventoryString
+end
 -- Get Stat Bonus
 function player.getBonus(stat)
     if stat % 2 == 0 then stat=stat-1 end
@@ -112,7 +163,6 @@ function player:takeDamage(amount)
 end
 
 function player:hasMetNPC(npcName)
-    print("HAVE MET?")
     return player.metNPCs[npcName] or false
 end
 
