@@ -455,7 +455,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["Color"] = "BLUE",
+            ["Color"] = "blue",
             ["Locked"] = true,
             ["Type"] = "DOOR"
           }

@@ -26,11 +26,11 @@ end
 -- Handle interactions with players
 function InteractableManager:handleInteraction(player, object)
     if object.type=="DOOR" then
-        print("A DOOR!!!")
+        if object.locked then
+            return self:tryUnlockDoor(player,object)
+        end
     elseif object.type=="CHEST" then
-        print("BEAUTIFUL CHEST!")
-        self:openChest(player,object)
-        print(player:getInventory())
+        return self:openChest(player,object)
     end
     if object.type=="DOOR" and object.locked~=true then
         return true
@@ -41,7 +41,17 @@ end
 
 -- Handle collision?
 
-
+function InteractableManager:tryUnlockDoor(player, door)
+    if door and door.type=="DOOR" and door.locked then
+        local requiredKey = door.color
+        if player.inventory.keys[requiredKey] and player.inventory.keys[requiredKey] > 0 then
+            door.locked=false
+            player.inventory.keys[requiredKey] = player.inventory.keys[requiredKey]-1
+            return true, "Door unlocked!"
+        end
+        return false, "You need a " .. requiredKey .. " key."
+    end
+end
 
 -- Parse chest contents
 function parseContents(contentString)
@@ -74,9 +84,8 @@ function InteractableManager:openChest(player,chest)
         end
         chest.opened = true
         chest.contents = ""
-        local message = "You found: " .. table.concat(itemsCollected, ",")
-        print(message)
-        return true, message
+        local message = "You found: " .. table.concat(itemsCollected, ", ")
+        return false, message
     else
         return false, "This chest is empty."
     end
@@ -98,8 +107,6 @@ end
 
 function InteractableManager:addObject(objectType,x,y,properties)
     local key = self:makeKey(x,y)
-    print("ADDED NEW OBJECT", objectType, x, y)
-    print(properties.locked)
     self.objects[key] = {
         type=objectType,
         x=x,
