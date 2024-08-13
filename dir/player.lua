@@ -215,6 +215,11 @@ function player:getAttributes()
     return statsTable
 end
 
+function player:getStats()
+    local table = {name=self.name,hp=self.hp, max_hp=self.max_hp, dmg=self.damage,def=self.defense,forc=self.force,fine=self.finesse,hard=self.hardiness,cont=self.contemplation}
+    return table
+end
+
 function player:findInInventory(func)
     return table.find(self.inventory.items, func)
 end

@@ -34,6 +34,7 @@ function love.update(dt)
     -- game logic here
     if gameStarted then
         handleScrolling()
+        UI:updateHp(player.hp)
         if not player.isAlive() then
             UI:showGameOver()
             GM.GameState.set("GAMEOVER")
@@ -125,6 +126,8 @@ function love.keypressed(key)
         handleInventoryInput(key)
     elseif GM.GameState.get()=="GAMEOVER" then
         handleGameOverInput(key)
+    elseif GM.GameState.get()=="CHARSHEET" then
+        handleCharsheetInput(key)
     end
 end
 
@@ -163,6 +166,9 @@ function handleExplorationInput(key)
         resetGame()
     elseif key=='k' then
         player:takeDamage(666)
+    elseif key=='c' then
+        GM.GameState.set("CHARSHEET")
+        UI:showCharsheet(player:getStats())
     end
 
     local targetX, targetY = player:keypressed(key) -- screen coords
@@ -183,6 +189,13 @@ function handleInventoryInput(key)
         message = player:useItem(choice)
         UI:addCombatMessage(message)
         GM.UI:hideInventory()
+        GM.GameState.set("EXPLORING")
+    end
+end
+
+function handleCharsheetInput(key)
+    if key=="escape" or key=="q" then
+        UI:hideCharsheet()
         GM.GameState.set("EXPLORING")
     end
 end

@@ -3,6 +3,7 @@ local UI = {
     dialogOptions = {},
     combatLog = {},
     inventoryTable={},
+    statTable={}
 }
 
 function UI:initialize()
@@ -13,6 +14,7 @@ function UI:initialize()
     self.state=""
     self.menuFont = love.graphics.newFont(24)
     self.infoFont = love.graphics.newFont(12)
+    self.hp = 0
 end
 
 function UI:addCombatMessage(message)
@@ -20,6 +22,10 @@ function UI:addCombatMessage(message)
     if #self.combatLog>5 then -- Keep only last 4 messeages
         table.remove(self.combatLog,1) -- 1 indexing (T-T)b
     end
+end
+
+function UI:updateHp(hp)
+    self.hp=hp
 end
 
 function UI:showDialog(text, options)
@@ -45,6 +51,30 @@ function UI:hideInventory()
     self.isShowingInventory=false
     self.state=""
     self.inventoryTable={}
+end
+
+function UI:showCharsheet(statTable)
+    love.graphics.setFont(self.infoFont)
+    self.statTable = {"Name: "..statTable.name,"HP: "..statTable.hp.."/"..statTable.max_hp
+    }
+    self.attributeTable = {
+        "Force: "..statTable.forc,
+        "Finesse: "..statTable.fine,
+        "Hardiness: "..statTable.hard,
+        "Contemplation: "..statTable.cont
+    }
+    self.derivedTable = {
+        "Damage: "..statTable.dmg,
+        "Defense: "..statTable.def
+    }
+    self.state="charsheet"
+end
+
+function UI:hideCharsheet()
+    self.state=""
+    self.statTable = {}
+    self.attributeTable = {}
+    self.derivedTable = {}
 end
 
 function UI:showMainMenu()
@@ -93,11 +123,14 @@ function UI:draw()
         end
     elseif self.state=="inventory" then -- Inventory
         self:drawInventory()
+    elseif self.state=="charsheet" then
+        self:drawCharsheet()
     else -- combat log
         love.graphics.setFont(self.infoFont)
         for i, message in ipairs(self.combatLog) do
             love.graphics.print(message,10,10+(i-1)*20)
         end
+        love.graphics.print("HP: "..self.hp,love.graphics.getWidth()-(5*12), 10)
     end
 
     --love.graphics.printf(self.dialogText, 10, love.graphics.getHeight() - 50, love.graphics.getWidth() - 20, "left")
@@ -128,6 +161,27 @@ function UI:drawInventory()
     
     for i, info in ipairs(otherItems) do
         love.graphics.print(info, 10, separatorY + 10 + (i-1)*20)
+    end
+end
+
+function UI:drawCharsheet()
+    local width = love.graphics.getWidth()
+    local height = love.graphics.getHeight()
+    local printwidth=width-(15*12)
+    love.graphics.print("Character Sheet",printwidth,10)
+    local separatorY = 30
+    love.graphics.line(printwidth, separatorY, width-75, separatorY)
+    for i, item in ipairs(self.statTable) do
+        love.graphics.print(item,printwidth, 40 + (i-1)*20)
+    end
+    separatorY = 40 + #self.statTable * 20
+    love.graphics.line(printwidth, separatorY, width-75, separatorY)
+    for i, item in ipairs(self.attributeTable) do
+        love.graphics.print(item,printwidth, separatorY + 10 + (i-1)*20)
+    end
+    separatorY = separatorY + #self.attributeTable * 20
+    for i, item in ipairs(self.derivedTable) do
+        love.graphics.print(item,printwidth, separatorY + 10 + (i-1)*20)
     end
 end
 
