@@ -7,7 +7,7 @@ local ItemManager = require("managers/ItemManager")
 
 InteractableManager = {}
 
--- TODO string to table to parse out contents
+-- TODO How to handle stacking of items?
 
 function InteractableManager:new(mapData)
     local o = {}
@@ -45,14 +45,16 @@ end
 function InteractableManager:tryUnlockDoor(player, door)
     if door and door.type=="DOOR" and door.locked then
         local requiredKey = door.color
-        print("COLOR: ".. door.color)
-        print("PLAYER KEYS: " .. player.inventory.keys[requiredKey])
-        if player.inventory.keys[requiredKey] and player.inventory.keys[requiredKey] > 0 then
-            door.locked=false
-            player.inventory.keys[requiredKey] = player.inventory.keys[requiredKey]-1
-            return true, "Door unlocked!"
+
+        local keyIndex = player:findInInventory(function(item) return item.def.color==requiredKey end)
+        print(keyIndex)
+        if keyIndex then
+            door.locked = false
+            table.remove(player.inventory.items,keyIndex)
+            return true, "Door unlocked."
+        else
+            return false, "You need a " .. requiredKey .. " key."
         end
-        return false, "You need a " .. requiredKey .. " key."
     end
 end
 
@@ -73,21 +75,22 @@ function InteractableManager:openChest(player,chest)
         local contents = parseContents(chest.contents)
         local itemsCollected = {}
         for itemName,count in pairs(contents) do
-
             if itemName=="gold" then -- Add gold, and stack em high
                 player:addGold(count)
                 table.insert(itemsCollected,count.." gold")
-            elseif itemName:find("key") then -- Add key and stack em high
-                local keyColor = itemName:match("(%w+)_key")
-                player:addKey(keyColor)
-                table.insert(itemsCollected, count .. " " ..  keyColor .. " key(s)")
             else
                 local itemDef = ItemManager:getItem(itemName) -- Add items (swords, armor, etc) and don't stack em high...
                 if itemDef then
-                    if player:addItem(itemName, itemDef) then
-                        table.insert(itemsCollected, itemDef.name)
-                    else
-                        table.insert(itemsCollected, "Couldn't pick up " .. itemDef.name .. " (inventory full)")
+                    local addedCount = player:addItem(itemName, itemDef, count)
+                    if addedCount>0 then
+                        if addedCount==1 then
+                            table.insert(itemsCollected,itemDef.name)
+                        else
+                            table.insert(itemsCollected, addedCount .. " " .. itemDef.name)
+                        end
+                    elseif addedCount < count then
+                        local notAdded = count - addedCount 
+                        table.insert(itemsCollected, "Couldn't pick up " .. notAdded .. " " .. itemDef.name .. " (inventory full)")
                     end
                 end
             end

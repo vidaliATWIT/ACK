@@ -20,6 +20,11 @@ ItemManager = {
             defense=2,
             equipped=""
         },
+        redKey = { name="Red Key", type="key", value=0, color="red" },
+        blueKey = { name="Blue Key", type="key",value=0, color="blue"},
+        greenKey = { name="Green Key", type="key",value=0, color="green"},
+        goldKey = { name="Gold Key", type="key",value=0, color="gold"},
+        skeletonKey = { name = "Skeleton Key", type="key", value=666, color="redbluegreenyellow"}
     }
 }
 

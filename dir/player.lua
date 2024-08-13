@@ -1,18 +1,5 @@
 -- Define player table
-local player = {
-    metNPCs={},
-    quests={},
-    inventory={
-        keys = {
-            red=0,
-            blue=0,
-            green=0,
-            gold=0,
-        },
-        items={},
-        gold=0
-    },
-}
+local player = {}
 local config = require("util.conf")
 local scale = config.scale_factor
 local Dice = require("util.Dice")
@@ -54,11 +41,18 @@ function player:init(o)
     player.contemplation=o.contemplation or 14
     player.hardiness=o.hardiness or 14
     -- "Equipment" Stats
+    player.inventory={
+        items={},
+        gold=0
+    }
     player.armor={}
     player.weapon={}
 
     player.defense=0
     player.damage=4
+    -- NPC Stats
+    player.metNPCs={}
+    player.quests={}
 end
 
 function player:keypressed(key)
@@ -112,27 +106,22 @@ function player:attack(entity)
     return false, 0
 end
 
--- Add an item to items using pre-set def
-function player:addItem(itemName, itemDef)
-    -- Strength is Carry Capacity
-    print(#self.inventory.items)
-    if #self.inventory.items < self.force then
-        if itemDef then
-            table.insert(self.inventory.items, {
-                name=itemDef.name,
-                def=itemDef,
-            })
-            return true
+function player:addItem(itemName,itemDef,count)
+    count = count or 1
+    local addedCount = 0
+    for i=1, count do
+        if #self.inventory.items < self.force then
+            table.insert(self.inventory.items, {name=itemDef.name, def=itemDef})
+            addedCount = addedCount+1
         else
-            print("WARNING: Tried to add unknown item '" .. itemName .. "' to inventory.")
-            return false
+            break
         end
     end
-    return false -- inventory full
+    return addedCount
 end
 
 -- Handle to remove items
-function player:removeItem(itemType,itemName,count)
+function player:removeItem(index)
     if index > 0 and index <= #self.inventory.items then
         return table.remove(self.inventory.items, index)
     end
@@ -144,7 +133,7 @@ function player:useItem(index)
     local item = self.inventory.items[index]
     if not item then return "Cannot use that." end
 
-    if item.def.type==consummable and item.def.effect then
+    if item.def.type=="consumable" and item.def.effect then
         item.def.effect(self)
         self:removeItem(index)
         return "Used " .. item.name
@@ -194,10 +183,6 @@ function player:getItem(index)
     return self.inventory.items[index]
 end
 
-function player:addKey(color)
-    self.inventory.keys[color] = (self.inventory.keys[color] or 0) + 1
-end
-
 function player:addGold(count)
     self.inventory.gold = (self.inventory.gold or 0) + count 
 end
@@ -206,21 +191,44 @@ function player:removeGold(count)
     self.inventory.gold = math.max(0, (self.inventory.gold or 0) - count)
 end
 
--- Parses through inventory and returns string
+-- Parses through inventory and returns table
 function player:getInventory()
     local inventoryTable = {}
     for index,properties in pairs(self.inventory.items) do
-        table.insert(inventoryTable, index .. ") " .. properties.name .. properties.def.equipped .."\n")
-    end
-    for color,count in pairs(self.inventory.keys) do
-        if count>0 then
-            table.insert(inventoryTable,color .. " key" .. "\n")
+        if (properties.def.equipped) then
+            table.insert(inventoryTable, index .. ") " .. properties.name .. properties.def.equipped .."\n")
+        else
+            table.insert(inventoryTable, index .. ") " .. properties.name .."\n")
         end
     end
-    table.insert(inventoryTable, self.inventory.gold .. " gold pieces\n")
-    inventoryString=table.concat(inventoryTable, "")
     return inventoryTable
 end
+
+function player:getPrimaryStats()
+    local statsTable = {hp=self.hp, max_hp=self.max_hp, dmg=self.damage, def=self.defense}
+    return statsTable
+end
+
+-- Returns table of stats
+function player:getAttributes()
+    local statsTable = {forc=self.force, fin=self.finess, har=self.hardiness, con=self.contemplation}
+    return statsTable
+end
+
+function player:findInInventory(func)
+    return table.find(self.inventory.items, func)
+end
+
+-- Helper function for inventory search
+function table.find(t, predicate)
+    for i, v in ipairs(t) do
+        if predicate(v) then
+            return i
+        end
+    end
+    return nil
+end
+
 -- Get Stat Bonus
 function player.getBonus(stat)
     if stat % 2 == 0 then stat=stat-1 end

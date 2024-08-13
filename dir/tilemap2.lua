@@ -385,7 +385,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["Content"] = "gold#5,ironSword#1,blue_key#1,leatherArmor#1",
+            ["Content"] = "gold#5,ironSword#1,blueKey#1,leatherArmor#1,healthPotion#4",
             ["Locked"] = false,
             ["Opened"] = false,
             ["Type"] = "CHEST"
@@ -403,7 +403,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["Content"] = "gold#5",
+            ["Content"] = "gold#5,healthPotion#1",
             ["Locked"] = true,
             ["Opened"] = false,
             ["Type"] = "CHEST"

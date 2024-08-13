@@ -29,6 +29,8 @@ function GameMaster.initialize(useHashTable, worldWidth, worldHeight, map, playe
     GM.interactableManager = InteractableManager:new(_G.map) -- init interact manager
     GM.UI=UI
     GM.GameState=GameState
+    -- Entity Setup
+    GM.initCollisionMatrix()
 end
 -- Initialize Collision Matrix with walls, entities and player
 function GameMaster.initCollisionMatrix()

@@ -7,35 +7,58 @@ local TILE_SIZE = 16
 local PIXEL_TO_TILE = 1 / scale / TILE_SIZE
 local TILE_TO_PIXEL = TILE_SIZE * scale
 local UI = require("UI")
+local readyToQuit = false
+local gameStarted = false
+local debug=true
 
 
 function love.load()
     -- Screen Setup
     _G.width = 1024
     _G.height = 768
-    _G.offsetX = 0
-    _G.offsetY = 0
-    _G.screenTilesX=_G.width*PIXEL_TO_TILE -- Easy reference for how many grid squares are visible in each axis
-    _G.screenTilesY=_G.height*PIXEL_TO_TILE
     love.window.setMode(_G.width, _G.height)
     love.graphics.setDefaultFilter("nearest", "nearest", 1)
+
     -- Map Setup
     sti = require 'lib/sti'
-    _G.map = sti('tilemap2.lua')
-    -- Player Setup
-    player.load()
-    player:init({x=1,y=8})
-    print(player.name)
-    -- Gamemaster setup
-    GM.initialize(true,32,32,_G.map,player)
-    -- Entity Setup
-    GM.initCollisionMatrix()
+
+    if debug then
+        resetGame()
+    else    
+        UI:initialize()
+        UI:showMainMenu()
+    end
 end
 
 function love.update(dt)
     -- game logic here
+    if gameStarted then
+        handleScrolling()
+        if not player.isAlive() then
+            UI:showGameOver()
+            GM.GameState.set("GAMEOVER")
+        end
+    end
 end
 
+-- Game Reset
+function resetGame()
+        _G.offsetX = 0
+        _G.offsetY = 0
+        _G.screenTilesX=_G.width*PIXEL_TO_TILE -- Easy reference for how many grid squares are visible in each axis
+        _G.screenTilesY=_G.height*PIXEL_TO_TILE
+        gameStarted=true
+        -- UI RESET
+        UI:initialize()
+
+        _G.map = sti('tilemap2.lua')
+        -- Player Setup
+        player.load()
+        player:init({x=1,y=5})
+        -- Gamemaster setup
+        GM.initialize(true,32,32,_G.map,player)
+        GM.GameState.set("EXPLORING")
+end
 
 function getFogIntensity(x,y)
     local dx = (x - (player.x+GM.offsetX)*TILE_TO_PIXEL) / scale
@@ -71,32 +94,53 @@ end
  
 function love.draw()
     -- game rendering here
+    if gameStarted and GM.GameState.get()~="GAMEOVER" then
+        local startX = -GM.offsetX
+        local startY = -GM.offsetY
+        local endX = math.ceil((startX + _G.width*PIXEL_TO_TILE))
+        local endY = math.ceil((startY + _G.height*PIXEL_TO_TILE))
+        visibleEntities = GM.entityManager:getEntitiesInRange(startX, startY, endX, endY)
 
-    local startX = -GM.offsetX
-    local startY = -GM.offsetY
-    local endX = math.ceil((startX + _G.width*PIXEL_TO_TILE))
-    local endY = math.ceil((startY + _G.height*PIXEL_TO_TILE))
-    visibleEntities = GM.entityManager:getEntitiesInRange(startX, startY, endX, endY)
-
-    _G.map:draw(GM.offsetX*TILE_SIZE,GM.offsetY*TILE_SIZE,scale,scale)
-    for _, entity in pairs(visibleEntities) do
-        drawEntity(entity, false)
+        _G.map:draw(GM.offsetX*TILE_SIZE,GM.offsetY*TILE_SIZE,scale,scale)
+        for _, entity in pairs(visibleEntities) do
+            drawEntity(entity, false)
+        end
+        drawFog()
+        --love.graphics.draw(player.image,player.x*TILE_TO_PIXEL, player.y*TILE_TO_PIXEL, 0, scale, scale)
+        drawEntity(player,true)
     end
-    drawFog()
-    --love.graphics.draw(player.image,player.x*TILE_TO_PIXEL, player.y*TILE_TO_PIXEL, 0, scale, scale)
-    drawEntity(player,true)
-    GM.UI:draw()
+    UI:draw()
 end
 
 function love.keypressed(key)
     -- handle input
     --print(GM.turn)
-    if GM.GameState.get()=="DIALOG" then
+    if not gameStarted then
+        handleMainMenuInput(key)
+    elseif GM.GameState.get()=="DIALOG" then
         handleDialogInput(key)
     elseif GM.GameState.get()=="EXPLORING" then
         handleExplorationInput(key)
     elseif GM.GameState.get()=="INVENTORY" then
         handleInventoryInput(key)
+    elseif GM.GameState.get()=="GAMEOVER" then
+        handleGameOverInput(key)
+    end
+end
+
+function handleMainMenuInput(key)
+    if key=='s' or key=='enter' then
+        resetGame()
+    elseif key=='q' or key=='escape' then
+        handleQuit()
+    end
+end
+
+function handleGameOverInput(key)
+    if key=='y' or key=='enter' then
+        resetGame()
+    elseif key=='n' or key=='escape' then
+        handleQuit()
     end
 end
 
@@ -115,13 +159,16 @@ function handleExplorationInput(key)
     if key=='i' then
         GM.GameState.set("INVENTORY")
         UI:showInventory(player:getInventory())
+    elseif key=='r' then
+        resetGame()
+    elseif key=='k' then
+        player:takeDamage(666)
     end
 
     local targetX, targetY = player:keypressed(key) -- screen coords
 
     if GM.canMove(targetX, targetY) then
         player:move()
-        handleScrolling()
     end
     GM.nextTurn()
 end
@@ -160,6 +207,18 @@ function handleScrolling()
         
     if scrollX ~= 0 or scrollY ~= 0 then
         GM.updateOffset(scrollX, scrollY)
+    end
+end
+
+function handleQuit()
+    love.event.quit("quit")
+end
+
+function love.quit()
+    if readyToQuit then
+        -- ALT: 
+        print("'ACK!'\nANOTHER DREG HANGS LIMP FROM THE JAWS OF COWARDICE!")
+        return false
     end
 end
    
