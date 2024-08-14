@@ -24,18 +24,21 @@ function GameMaster.initialize(useHashTable, worldWidth, worldHeight, map, playe
     GM.offsetY=0
     GM.player=player
     GM.mapManager = MapManager
-    GM.mapManager:loadMap("test_map1",'tilemap2.lua')
+    GM.mapManager:loadMap("town1",'town1.lua')
+    GM.mapManager:loadMap("dungeon1",'dungeon1.lua')
+    print("DOES OUR MAP EXIST? ", GM.mapManager.maps["dungeon1"])
     GM.entityManager = EntityManager.new(true,1,1,nil)
     GM.interactableManager = InteractableManager:new(nil)
 
     GM.UI=UI
     GM.GameState=GameState
-    GM:switchMap("test_map1")
+    GM:switchMap("town1")
 end
 
 -- Assume we load everything in GameMaster.init
 function GameMaster:switchMap(newMapId)
-    self.mapManager:switchMap(newMapId,GM.entityManager, GM.interactableManager)
+    local newMapId = tostring(newMapId)
+    GM.mapManager:switchMap(newMapId,GM.entityManager, GM.interactableManager)
     local currentMap = self.mapManager.currentMap
 
     _G.worldWidth = currentMap.width
@@ -44,19 +47,25 @@ function GameMaster:switchMap(newMapId)
     GM.entityManager:updateDimensions(_G.worldWidth,_G.worldHeight)
     GM.entityManager:loadEntities(currentMap.entities, currentMap.persistentState.entities)
     GM.interactableManager:loadObjects(currentMap.objects, currentMap.persistentState.objects)
-    GM:initCollisionMatrix()
     GM.player.targetX = currentMap.spawnPoint.x
     GM.player.targetY = currentMap.spawnPoint.y
     print("X AND Y SPAWN POINT: ", currentMap.spawnPoint.x, currentMap.spawnPoint.y )
+    GM:initCollisionMatrix()
+    print("Switched to map:", newMapId)
+    print("Map dimensions:", _G.worldWidth, _G.worldHeight)
+    print("Map tiles:", currentMap.tiles and "loaded" or "not loaded")
+    print("Floor layer:", currentMap.tiles and currentMap.tiles.floor and "exists" or "does not exist")
     GM.player.move()
+    
 end
 
 -- Initialize Collision Matrix with walls, entities and player
 function GameMaster.initCollisionMatrix()
+    collisionMatrix = {}
     for x = 0, _G.worldWidth-1 do
         CollisionMatrix[x] = {}
         for y = 0, _G.worldHeight-1 do
-            tile = GM.getTileAt("Floor", x,y)
+            tile = GM.getTileAt("floor", x,y)
             entity = GM.entityManager:getEntityAt(x,y)
             CollisionMatrix[x][y] = tile==nil or entity~=nil --Nil or true
         end
@@ -126,7 +135,7 @@ function GameMaster.handleStateTransition(entity)
 end
 
 function GameMaster.getTileAt(layerName, x, y)
-    local layer = MapManager.currentMap.tiles.floor
+    local layer = MapManager.currentMap.tiles[layerName]
     if not layer then
         error("Layer not found: " .. layerName)
     end
@@ -138,13 +147,19 @@ end
 function GameMaster.canMove(x,y)
     if true then
         -- check if where you're moving to is walkable
-        local floor = GM.getTileAt("Floor",x,y)
+        local floor = GM.getTileAt("floor",x,y)
         local entity = GM.entityManager:getEntityAt(x, y)
         local object = GM.interactableManager:getObjectAt(x,y)
         if object ~= nil then
             local objectOpen, message = GM.interactableManager:handleInteraction(GM.player,object)
             if message then
-                UI:addCombatMessage(message)
+                if string.find(message,"SWITCHMAP") then -- EXIT
+                    local nextMap = string.match(message, "^([^:]+)")
+                    GM:switchMap(nextMap)
+                    print(nextMap)
+                else
+                    UI:addCombatMessage(message)
+                end
             end
             return objectOpen
         end
@@ -264,7 +279,7 @@ function GameMaster:bresenhamLOS(pos1, pos2)
 
     while true do
         --print("Checking point:", x1, y1)
-        if GM.getTileAt("Walls", x1, y1) then
+        if GM.getTileAt("walls", x1, y1) then
             --print("Wall found at:", x1, y1)
             return false  -- Line of sight is blocked
         end

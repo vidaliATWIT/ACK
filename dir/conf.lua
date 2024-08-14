@@ -1,6 +1,4 @@
-local conf = {
-    scale_factor=4
-}
+local conf = {}
 
 function love.conf(t)
     t.console = true

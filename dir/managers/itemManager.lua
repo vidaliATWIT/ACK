@@ -13,11 +13,25 @@ ItemManager = {
             damage=6,
             equipped=""
         },
+        silverSword = {
+            name="Silver Sword",
+            type="weapon",
+            value=200,
+            damage=12,
+            equipped=""
+        },
         leatherArmor = {
             name="Leather Armor",
             type="armor",
             value=40,
             defense=2,
+            equipped=""
+        },
+        chainArmor = {
+            name="Chain Armor",
+            type="armor",
+            value=40,
+            defense=4,
             equipped=""
         },
         redKey = { name="Red Key", type="key", value=0, color="red" },

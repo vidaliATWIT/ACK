@@ -52,7 +52,6 @@ function resetGame()
         -- UI RESET
         UI:initialize()
 
-        _G.map = sti('tilemap2.lua')
         -- Player Setup
         player.load()
         player:init({x=1,y=5})
@@ -102,7 +101,7 @@ function love.draw()
         local endY = math.ceil((startY + _G.height*PIXEL_TO_TILE))
         visibleEntities = GM.entityManager:getEntitiesInRange(startX, startY, endX, endY)
 
-        _G.map:draw(GM.offsetX*TILE_SIZE,GM.offsetY*TILE_SIZE,scale,scale)
+        GM.mapManager:draw(GM.offsetX*TILE_SIZE,GM.offsetY*TILE_SIZE,scale,scale)
         for _, entity in pairs(visibleEntities) do
             drawEntity(entity, false)
         end

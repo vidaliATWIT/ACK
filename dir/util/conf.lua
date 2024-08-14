@@ -1,5 +1,5 @@
 local conf = {
-    scale_factor=4,
+    scale_factor=6,
     tile_width=16,
     transform=16*4,
 }

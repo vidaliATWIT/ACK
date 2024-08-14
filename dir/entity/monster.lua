@@ -129,7 +129,7 @@ end
 
 function monster:applyState(state)
     self.hp=state.hp
-    self.max_hp = satte.max_hp
+    self.max_hp = state.max_hp
     self.state="IDLE"
     self.awareCooldown=maxAwarenessCooldown
 end

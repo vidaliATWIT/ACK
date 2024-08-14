@@ -14,8 +14,6 @@ EntityManager.__index = EntityManager
 function EntityManager.new(useHashTable)
     local self = setmetatable({}, EntityManager)
     self.useHashTable = useHashTable
-    self.spawnPoints = {}
-    self.entities = {}
 
     if useHashTable then
         self.world = {} -- Hash Table
@@ -130,7 +128,7 @@ function EntityManager:spawnNPCs()
 end
 
 function EntityManager:loadEntities(spawnPoints, persistentState)
-    self.entities = {}
+    self.world = {}
     for _, spawnPoint in ipairs(spawnPoints) do
         local entity
         if spawnPoint.type=="MONSTER" then
@@ -154,8 +152,7 @@ end
 
 function EntityManager:getEntitiesState()
     local state = {}
-    print("IS IT EMPTY AT EntityManager", self.entities)
-    for _, entity in pairs(self.entities) do
+    for _, entity in pairs(self.world) do
         state[self:makeKey(entity.x,entity.y)] = entity:getState()
     end
     return state
@@ -168,6 +165,10 @@ end
 function EntityManager:updateDimensions(width,height)
     self.worldWidth=width
     self.worldHeight=height
+end
+
+function EntityManager:clear()
+    self.world = {}
 end
 
 return EntityManager

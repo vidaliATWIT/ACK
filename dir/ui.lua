@@ -13,7 +13,7 @@ function UI:initialize()
     self.inventoryTable={}
     self.state=""
     self.menuFont = love.graphics.newFont(24)
-    self.infoFont = love.graphics.newFont(12)
+    self.infoFont = love.graphics.newFont(18)
     self.hp = 0
 end
 

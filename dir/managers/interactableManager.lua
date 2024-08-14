@@ -27,15 +27,14 @@ function InteractableManager:handleInteraction(player, object)
     if object.type=="DOOR" then
         if object.locked then
             return self:tryUnlockDoor(player,object)
+        else
+            return true
         end
     elseif object.type=="CHEST" then
         return self:openChest(player,object)
-    end
-    if object.type=="DOOR" and object.locked~=true then
-        return true
-    else
-        return false
-    end
+    elseif object.type=="EXIT" then
+        return self:handleExit(player,object)
+    end   
 end
 
 -- Handle collision?
@@ -55,6 +54,13 @@ function InteractableManager:tryUnlockDoor(player, door)
         end
     end
 end
+
+-- Returns false on collision and title of new Map
+function InteractableManager:handleExit(player, object)
+    local nextMap = object.nextMap
+    return false, nextMap..":SWITCHMAP"
+end
+
 
 -- Parse chest contents
 function parseContents(contentString)
@@ -144,9 +150,13 @@ end
 function InteractableManager:getObjectsState()
     local state = {}
     for _, object in pairs(self.objects) do
-        state[self:makeKey(object.x,object.y)] = self:getState(object)
+        state[self:makeKey(object.x,object.y)] = self:getObjectState(object)
     end
     return state
+end
+
+function InteractableManager:clear()
+    self.objects = {}
 end
 
 return InteractableManager
