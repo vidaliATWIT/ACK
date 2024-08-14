@@ -38,6 +38,7 @@ end
 function UI:hideDialog()
     self.state=""
     self.dialogText=""
+    self.combatLog={}
     self.dialogOptions={}
 end
 
@@ -55,6 +56,7 @@ end
 
 function UI:showCharsheet(statTable)
     love.graphics.setFont(self.infoFont)
+    self.combatLog={}
     self.statTable = {"Name: "..statTable.name,"HP: "..statTable.hp.."/"..statTable.max_hp
     }
     self.attributeTable = {
@@ -170,16 +172,17 @@ function UI:drawCharsheet()
     local printwidth=width-(15*12)
     love.graphics.print("Character Sheet",printwidth,10)
     local separatorY = 30
-    love.graphics.line(printwidth, separatorY, width-75, separatorY)
+    love.graphics.line(printwidth, separatorY, width-20, separatorY)
     for i, item in ipairs(self.statTable) do
         love.graphics.print(item,printwidth, 40 + (i-1)*20)
     end
     separatorY = 40 + #self.statTable * 20
-    love.graphics.line(printwidth, separatorY, width-75, separatorY)
+    love.graphics.line(printwidth, separatorY, width-20, separatorY)
     for i, item in ipairs(self.attributeTable) do
         love.graphics.print(item,printwidth, separatorY + 10 + (i-1)*20)
     end
-    separatorY = separatorY + #self.attributeTable * 20
+    separatorY = separatorY + #self.attributeTable*24
+    love.graphics.line(printwidth, separatorY, width-20, separatorY)
     for i, item in ipairs(self.derivedTable) do
         love.graphics.print(item,printwidth, separatorY + 10 + (i-1)*20)
     end

@@ -127,4 +127,15 @@ function monster:interact(agent)
     }
 end
 
+function monster:applyState(state)
+    self.hp=state.hp
+    self.max_hp = satte.max_hp
+    self.state="IDLE"
+    self.awareCooldown=maxAwarenessCooldown
+end
+
+function monster:getState()
+    return {hp=self.hp,max_hp=self.max_hp,state=self.state,cooldown=self.awareCooldown}
+end
+
 return monster

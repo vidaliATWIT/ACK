@@ -14,6 +14,7 @@ local UI = require("UI")
 local DialogManager = require("managers.DialogManager")
 local InteractableManager = require("managers.InteractableManager")
 local GameState = require("managers.gameState")
+local MapManager = require("map/map")
 
 -- Controls all aspects of game logic and accesess map, player and entity locations on map
 function GameMaster.initialize(useHashTable, worldWidth, worldHeight, map, player)
@@ -22,16 +23,34 @@ function GameMaster.initialize(useHashTable, worldWidth, worldHeight, map, playe
     GM.offsetX=0
     GM.offsetY=0
     GM.player=player
-    _G.map = map
-    _G.worldWidth=worldWidth or 16
-    _G.worldHeight=worldHeight or 16
-    GM.entityManager = EntityManager.new(useHashTable,worldWidth,worldHeight, _G.map) -- init entity manager
-    GM.interactableManager = InteractableManager:new(_G.map) -- init interact manager
+    GM.mapManager = MapManager
+    GM.mapManager:loadMap("test_map1",'tilemap2.lua')
+    GM.entityManager = EntityManager.new(true,1,1,nil)
+    GM.interactableManager = InteractableManager:new(nil)
+
     GM.UI=UI
     GM.GameState=GameState
-    -- Entity Setup
-    GM.initCollisionMatrix()
+    GM:switchMap("test_map1")
 end
+
+-- Assume we load everything in GameMaster.init
+function GameMaster:switchMap(newMapId)
+    self.mapManager:switchMap(newMapId,GM.entityManager, GM.interactableManager)
+    local currentMap = self.mapManager.currentMap
+
+    _G.worldWidth = currentMap.width
+    _G.worldHeight = currentMap.height
+
+    GM.entityManager:updateDimensions(_G.worldWidth,_G.worldHeight)
+    GM.entityManager:loadEntities(currentMap.entities, currentMap.persistentState.entities)
+    GM.interactableManager:loadObjects(currentMap.objects, currentMap.persistentState.objects)
+    GM:initCollisionMatrix()
+    GM.player.targetX = currentMap.spawnPoint.x
+    GM.player.targetY = currentMap.spawnPoint.y
+    print("X AND Y SPAWN POINT: ", currentMap.spawnPoint.x, currentMap.spawnPoint.y )
+    GM.player.move()
+end
+
 -- Initialize Collision Matrix with walls, entities and player
 function GameMaster.initCollisionMatrix()
     for x = 0, _G.worldWidth-1 do
@@ -107,11 +126,11 @@ function GameMaster.handleStateTransition(entity)
 end
 
 function GameMaster.getTileAt(layerName, x, y)
-    local layer = _G.map.layers[layerName]
+    local layer = MapManager.currentMap.tiles.floor
     if not layer then
         error("Layer not found: " .. layerName)
     end
-    local tile = layer.data[y+1][x+1] -- WHY?!?! WHY IS IT TRANSPOSED?!?! WHO DID THIS?!
+    local tile = layer[y+1][x+1] -- WHY?!?! WHY IS IT TRANSPOSED?!?! WHO DID THIS?!
     return tile
 end
 
@@ -166,7 +185,6 @@ function GameMaster.handleInteraction(entity, player)
             GM.handleEntityDeath(entity)
         end
     elseif interaction.type=="dialog" then
-        print("dialog happening")
         DialogManager:startDialog(entity)
         GM.displayDialog()
         GM.GameState.set("DIALOG")

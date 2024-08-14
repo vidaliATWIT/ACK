@@ -9,14 +9,12 @@ InteractableManager = {}
 
 -- TODO How to handle stacking of items?
 
-function InteractableManager:new(mapData)
+function InteractableManager:new()
     local o = {}
     setmetatable(o,self)
     self.__index = self
-    self.mapData = mapData
     self.spawnPoints = {}
     self:initialize()
-    self:spawnObjects()
     return o
 end
 
@@ -118,34 +116,37 @@ function InteractableManager:makeKey(x,y)
     return x .. "," .. y
 end
 
-function InteractableManager:addObject(objectType,x,y,properties)
-    local key = self:makeKey(x,y)
-    self.objects[key] = {
-        type=objectType,
-        x=x,
-        y=y,
-        locked=properties.locked,
-        color=properties.color,
-        contents=properties.contents,
-        opened=properties.opened,
-    }
+function InteractableManager:loadObjects(objects, persistentState)
+    self.objects={}
+    for key, object in pairs(objects) do
+        self.objects[key] = object
+        local state = persistentState[key]
+        if state then
+            self:applyState(object,state)
+        end
+    end
 end
 
--- Iterates through map data to spawn items
-function InteractableManager:spawnObjects()
-    for _, object in ipairs(self.mapData.layers["Interactable"].objects) do
-        self:addObject(
-            object.properties.Type,
-            object.x/TILE_SIZE,
-            object.y/TILE_SIZE,
-            {
-                locked=object.properties.Locked,
-                contents=object.properties.Content,
-                color=object.properties.Color,
-                opened=object.properties.Opened,
-            }
-        )
+-- Handling stuff during applying state
+
+function InteractableManager:applyState(object, state)
+    object.locked = state.locked
+    object.contents = state.contents
+    object.color = state.color
+    object.opened = state.opened
+end
+
+function InteractableManager:getObjectState(object)
+    return {locked=object.locked, contents=object.contents, color=object.color, opened=object.opened}
+end
+
+-- Plural
+function InteractableManager:getObjectsState()
+    local state = {}
+    for _, object in pairs(self.objects) do
+        state[self:makeKey(object.x,object.y)] = self:getState(object)
     end
+    return state
 end
 
 return InteractableManager

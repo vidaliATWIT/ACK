@@ -131,4 +131,16 @@ function npc:interact(agent)
     end
 end
 
+-- For loading and saving state between map loads
+
+function npc:applyState(state)
+    self.hp=state.hp
+    self.max_hp=state.max_hp
+    self.state="IDLE"
+end
+
+function npc:getState(state)
+    return {hp=self.hp, max_hp=self.max_hp, state=self.state}
+end
+
 return npc

@@ -180,7 +180,7 @@ function handleExplorationInput(key)
 end
 
 function handleInventoryInput(key)
-    if key == "escape" then
+    if key == "escape" or key=="i" or key=="q" then
         GM.UI:hideInventory()
         GM.GameState.set("EXPLORING")
     elseif tonumber(key) then
@@ -194,7 +194,7 @@ function handleInventoryInput(key)
 end
 
 function handleCharsheetInput(key)
-    if key=="escape" or key=="q" then
+    if key=="escape" or key=="c" or key=="q" then
         UI:hideCharsheet()
         GM.GameState.set("EXPLORING")
     end

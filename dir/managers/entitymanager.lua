@@ -11,33 +11,16 @@ EntityManager.__index = EntityManager
 
 -- Manages our entities as an abstracted layer above our game-map
 -- Uses array for small maps, or a hashtable for larger ones
-function EntityManager.new(useHashTable, worldWidth, worldHeight, mapData)
+function EntityManager.new(useHashTable)
     local self = setmetatable({}, EntityManager)
     self.useHashTable = useHashTable
-    self.worldWidth = worldWidth or 16
-    self.worldHeight = worldHeight or 16
-    self.mapData = mapData
     self.spawnPoints = {}
+    self.entities = {}
 
     if useHashTable then
         self.world = {} -- Hash Table
-    else
-        self.world = {} -- 2D array
-        for x = 1, worldWidth do
-            self.world[x] = {}
-            for y = 1, worldHeight do
-                self.world[x][y] = nil
-            end
-        end
     end
-    self:parseSpawnPoints() -- set up spawn points
-    self:spawnMonsters()
-    self:spawnNPCs()
     return self
-end
-
-function EntityManager:makeKey(x,y)
-    return x .. "," .. y
 end
 
 function EntityManager:addEntity(entity)
@@ -45,11 +28,6 @@ function EntityManager:addEntity(entity)
         local key = self:makeKey(entity.x,entity.y)
         if not self.world[key] then
             self.world[key] = entity
-            return true
-        end
-    else
-        if self.world[entity.x] and not self.world[entity.x][entity.y] then
-            self.world[entity.x][entity.y] = entity
             return true
         end
     end
@@ -61,10 +39,6 @@ function EntityManager:removeEntity(entity)
     if self.useHashTable then
         local key = self:makeKey(entity.x,entity.y)
         self.world[key]=nil
-    else
-        if self.world[entity.x] then
-            self.world[entity.x][entity.y]=nil
-        end
     end
 end
 
@@ -81,13 +55,6 @@ function EntityManager:moveEntity(entity, newX, newY)
         if not self.world[newKey] then
             self.world[oldKey]=nil
             self.world[newKey]=entity
-            entity.x,entity.y=newX,newY
-            return true
-        end
-    else
-        if not self.world[newX][newY] then
-            self.world[entity.x][entity.y] = nil
-            self.world[newX][newY]=entity
             entity.x,entity.y=newX,newY
             return true
         end
@@ -138,14 +105,6 @@ function EntityManager:getAllEntities()
         for _, entity in pairs (self.world) do
             table.insert(entities,entity)
         end
-    else
-        for x = 1, self.worldWidth do
-            for y = 1, self.worldHeight do
-                if self.world[x][y] then
-                    table.insert(entities, self.world[x][y])
-                end
-            end
-        end
     end
     return entities
 end
@@ -170,29 +129,45 @@ function EntityManager:spawnNPCs()
     end
 end
 
--- Iterate through map data to spawn entities
-function EntityManager:parseSpawnPoints()
-    for _, object in ipairs(self.mapData.layers["SpawnPoints"].objects) do
-        print(object.x/TILE_SIZE, object.y/TILE_SIZE)
-        table.insert(self.spawnPoints, {
-            x=object.x/TILE_SIZE,
-            y=object.y/TILE_SIZE,
-            type=object.properties.Type,
-            subType=object.properties.SubType,
-            name=object.properties.Name or "None"
-        })
+function EntityManager:loadEntities(spawnPoints, persistentState)
+    self.entities = {}
+    for _, spawnPoint in ipairs(spawnPoints) do
+        local entity
+        if spawnPoint.type=="MONSTER" then
+            entity = monster:new(spawnPoint.subType, spawnPoint.x, spawnPoint.y)
+        elseif spawnPoint.type == "NPC" then
+            entity = npc:new(spawnPoint.subType, spawnPoint.name, spawnPoint.x, spawnPoint.y)
+        end
+
+        if entity then -- Check if we have a persistent state for this entity
+            local state = persistentState[self:makeKey(spawnPoint.x,spawnPoint.y)]
+            if state then
+                entity:applyState(state)
+            end
+
+            if entity:isAlive() then
+                self:addEntity(entity)
+            end
+        end
     end
 end
 
-function EntityManager:getSpawnPoints(spawnType)
-    local points = {}
-    for _, point in ipairs(self.spawnPoints) do
-        if point.type==spawnType then
-            --print(spawnType)
-            table.insert(points,point)
-        end
+function EntityManager:getEntitiesState()
+    local state = {}
+    print("IS IT EMPTY AT EntityManager", self.entities)
+    for _, entity in pairs(self.entities) do
+        state[self:makeKey(entity.x,entity.y)] = entity:getState()
     end
-    return points
+    return state
+end
+
+function EntityManager:makeKey(x,y)
+    return x .. "," .. y
+end
+
+function EntityManager:updateDimensions(width,height)
+    self.worldWidth=width
+    self.worldHeight=height
 end
 
 return EntityManager

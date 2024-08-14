@@ -55,6 +55,10 @@ function Entity:interact(agent)
     }
 end
 
+function Entity:applyState(state)
+    error("Subclass must implement applyState method")
+end
+
 -- Common functions
 
 function Entity:getPosition()
