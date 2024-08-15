@@ -33,6 +33,7 @@ end
 function love.update(dt)
     -- game logic here
     if gameStarted then
+        updateTransition(dt)
         handleScrolling()
         UI:updateHp(player.hp)
         if not player.isAlive() then
@@ -110,6 +111,11 @@ function love.draw()
         drawEntity(player,true)
     end
     UI:draw()
+    if GM.transitionState.active then
+        love.graphics.setColor(0, 0, 0, GM.transitionState.alpha)
+        love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+        love.graphics.setColor(1, 1, 1, 1)
+    end
 end
 
 function love.keypressed(key)
@@ -200,25 +206,34 @@ function handleCharsheetInput(key)
 end
 
 function handleScrolling()
+    local bufferTile = 1
+    local newOffsetX = 0
+    local newOffsetY = 0
+
     local newScreenX = (player.x + GM.offsetX) * TILE_TO_PIXEL
     local newScreenY = (player.y + GM.offsetY) * TILE_TO_PIXEL
         
     local scrollX, scrollY = 0, 0
-        
+
     if newScreenX < TILE_TO_PIXEL then
+        newOffsetX = bufferTile - player.x
         scrollX = 1
     elseif newScreenX > _G.width - 2 * TILE_TO_PIXEL then
+        newOffsetX = _G.screenTilesX-(1+bufferTile+player.x)
         scrollX = -1
     end
         
     if newScreenY < TILE_TO_PIXEL then
+        newOffsetY=bufferTile - player.y
         scrollY = 1
     elseif newScreenY > _G.height - 2 * TILE_TO_PIXEL then
+        newOffsetY=_G.screenTilesY-(1+bufferTile+player.y)
         scrollY = -1
     end
         
     if scrollX ~= 0 or scrollY ~= 0 then
-        GM.updateOffset(scrollX, scrollY)
+        GM.offsetY=newOffsetY
+        GM.offsetX=newOffsetX
     end
 end
 
@@ -231,6 +246,29 @@ function love.quit()
         -- ALT: 
         print("'ACK!'\nANOTHER DREG HANGS LIMP FROM THE JAWS OF COWARDICE!")
         return false
+    end
+end
+
+function updateTransition(dt)
+    if GM.transitionState.active then
+        print(GM.offsetX,GM.offsetY)
+        local fadeSpeed = 1 -- Adjust this value to change fade speed
+        
+        if not GM.transitionState.fadingIn then
+            GM.transitionState.alpha = GM.transitionState.alpha + fadeSpeed * dt
+            if GM.transitionState.alpha >= 1 then
+                GM.transitionState.alpha = 1
+                GM.transitionState.fadingIn = true
+                -- Perform the actual map switch here
+                GM.executeMapSwitch()
+            end
+        else
+            GM.transitionState.alpha = GM.transitionState.alpha - fadeSpeed * dt
+            if GM.transitionState.alpha <= 0 then
+                GM.transitionState.alpha = 0
+                GM.transitionState.active = false
+            end
+        end
     end
 end
    

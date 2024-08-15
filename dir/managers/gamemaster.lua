@@ -29,6 +29,7 @@ function GameMaster.initialize(useHashTable, worldWidth, worldHeight, map, playe
     print("DOES OUR MAP EXIST? ", GM.mapManager.maps["dungeon1"])
     GM.entityManager = EntityManager.new(true,1,1,nil)
     GM.interactableManager = InteractableManager:new(nil)
+    GM.transitionState={active=false,alpha=0,fadingIn=false}
 
     GM.UI=UI
     GM.GameState=GameState
@@ -56,7 +57,35 @@ function GameMaster:switchMap(newMapId)
     print("Map tiles:", currentMap.tiles and "loaded" or "not loaded")
     print("Floor layer:", currentMap.tiles and currentMap.tiles.floor and "exists" or "does not exist")
     GM.player.move()
-    
+end
+
+function GameMaster:initiateMapSwitch(newMapId)
+    GM.pendingMapId = newMapId
+    GM.transitionState.active = true
+    GM.transitionState.alpha = 0
+    GM.transitionState.fadingIn = false
+end
+
+function GameMaster:executeMapSwitch()
+    local newMapId = GM.pendingMapId
+    GM.mapManager:switchMap(newMapId,GM.entityManager, GM.interactableManager)
+    local currentMap = GM.mapManager.currentMap
+
+    _G.worldWidth = currentMap.width
+    _G.worldHeight = currentMap.height
+
+    GM.entityManager:updateDimensions(_G.worldWidth,_G.worldHeight)
+    GM.entityManager:loadEntities(currentMap.entities, currentMap.persistentState.entities)
+    GM.interactableManager:loadObjects(currentMap.objects, currentMap.persistentState.objects)
+    GM.player.targetX = currentMap.spawnPoint.x
+    GM.player.targetY = currentMap.spawnPoint.y
+    print("X AND Y SPAWN POINT: ", currentMap.spawnPoint.x, currentMap.spawnPoint.y )
+    GM:initCollisionMatrix()
+    print("Switched to map:", newMapId)
+    print("Map dimensions:", _G.worldWidth, _G.worldHeight)
+    print("Map tiles:", currentMap.tiles and "loaded" or "not loaded")
+    print("Floor layer:", currentMap.tiles and currentMap.tiles.floor and "exists" or "does not exist")
+    GM.player.move()
 end
 
 -- Initialize Collision Matrix with walls, entities and player
@@ -155,7 +184,7 @@ function GameMaster.canMove(x,y)
             if message then
                 if string.find(message,"SWITCHMAP") then -- EXIT
                     local nextMap = string.match(message, "^([^:]+)")
-                    GM:switchMap(nextMap)
+                    GM:initiateMapSwitch(nextMap)
                     print(nextMap)
                 else
                     UI:addCombatMessage(message)

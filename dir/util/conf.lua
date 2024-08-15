@@ -1,7 +1,6 @@
 local conf = {
-    scale_factor=6,
+    scale_factor=4,
     tile_width=16,
-    transform=16*4,
 }
 
 function love.conf(t)
@@ -9,13 +8,16 @@ function love.conf(t)
 end
 
 function conf:arrayToPos(x,y)
-    return x*transform,y*transform
+    return x*self:Transform(),y*self:Transform()
 end
 function conf:posToArray(x,y)
-    return x/transform,y/transform
+    return x/self:Transform(),y/self:Transform()
 end
 function conf:multiplyTransform(x)
-    return x*transform
+    return x*self:Transform()
+end
+function conf:Transform()
+    return scale_factor*tile_width
 end
 
 return conf
