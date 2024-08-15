@@ -1,5 +1,7 @@
 --Look into sysl-text later, it probably handles this stuff a lot better.
 
+local trainingCost = {[10]=50,[11]=100,[12]=150,[13]=250,[14]=500,[15]=1000,[16]=2000,[17]=3500}
+
 local function genericGreeting(npcName)
     return function(player)
         if player:hasMetNPC(npcName) then
@@ -32,6 +34,12 @@ local function simpleDialog(text)
         }
     }
 end
+
+-- Return cost of training
+local function getTrainingCost(player_skill)
+    return trainingCost[player_skill]
+end
+
 
 local DialogTrees = {
     Aimee = {
@@ -102,9 +110,21 @@ local DialogTrees = {
             }
         },
         teach_options = {
-            text = "I can teach you how to swing your sword harder. Do you accept?",
+            text = function(player)
+                    return string.format("The training will cost %d gold. Do you accept?", getTrainingCost(player.force))
+            end,
             options = {
-                {text = "Yes, teach me this.", next="combat_training"},
+                {text = "Yes, teach me this.", 
+                next=function(player)
+                    local gold = player.inventory.gold
+                    print("Player cash: ", gold)
+                    if (gold<getTrainingCost(player.force)) then
+                        print("We're too poor...")
+                        return "too_poor"
+                    else
+                        return "combat_training"
+                    end
+                end},
                 {text = "I'm too tired today maybe tomorrow. Bye.", next="exit"}
             }
         },
@@ -115,11 +135,18 @@ local DialogTrees = {
             },
             effect = function(player)
                 player.force=player.force+1
+                player:removeGold(getTrainingCost(player.force))
                 print(player.name,  " got better at swinging his sword... ", player.force)
             end
         },
         too_strong = {
             text = "I have already taught you all I know.",
+            options = {
+                {text = "I see. Goodbye.", next="exit"}
+            }
+        },
+        too_poor = {
+            text = function(player) return string.format("You need %s gold to pay for this training...", getTrainingCost(player.force)) end,
             options = {
                 {text = "I see. Goodbye.", next="exit"}
             }

@@ -12,11 +12,19 @@ function DialogManager:startDialog(npc)
 end
 
 function DialogManager:getCurrentText()
-    return self.currentDialog.text
+    return self:resolveText(self.currentDialog.text,self.currentNPC)
 end
 
 function DialogManager:getOptions()
     return self.currentDialog.options
+end
+
+function DialogManager:resolveText(text,npc)
+    print(text)
+    while type(text) == "function" do
+        text = text(player)
+    end
+    return text
 end
 
 function DialogManager:resolveDialog(dialog, npc)

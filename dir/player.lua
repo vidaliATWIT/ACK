@@ -43,7 +43,7 @@ function player:init(o)
     -- "Equipment" Stats
     player.inventory={
         items={},
-        gold=0
+        gold=5000
     }
     player.armor={}
     player.weapon={}

@@ -11,7 +11,7 @@ local NPCTemplates = {
         npcType="mook",
         awarenessCooldown=3,
         offers_training=false,
-        offers_quests=false,
+        offers_quests=true,
     },
     TRAINER = { -- NPCs that can train the player
         image = "/res/human2.png",
