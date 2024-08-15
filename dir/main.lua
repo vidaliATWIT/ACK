@@ -251,8 +251,7 @@ end
 
 function updateTransition(dt)
     if GM.transitionState.active then
-        print(GM.offsetX,GM.offsetY)
-        local fadeSpeed = 1 -- Adjust this value to change fade speed
+        local fadeSpeed = 2 -- Adjust this value to change fade speed
         
         if not GM.transitionState.fadingIn then
             GM.transitionState.alpha = GM.transitionState.alpha + fadeSpeed * dt

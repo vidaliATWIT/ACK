@@ -38,25 +38,12 @@ end
 
 -- Assume we load everything in GameMaster.init
 function GameMaster:switchMap(newMapId)
-    local newMapId = tostring(newMapId)
-    GM.mapManager:switchMap(newMapId,GM.entityManager, GM.interactableManager)
-    local currentMap = self.mapManager.currentMap
+    GM:mapSwitch(newMapId)
+end
 
-    _G.worldWidth = currentMap.width
-    _G.worldHeight = currentMap.height
-
-    GM.entityManager:updateDimensions(_G.worldWidth,_G.worldHeight)
-    GM.entityManager:loadEntities(currentMap.entities, currentMap.persistentState.entities)
-    GM.interactableManager:loadObjects(currentMap.objects, currentMap.persistentState.objects)
-    GM.player.targetX = currentMap.spawnPoint.x
-    GM.player.targetY = currentMap.spawnPoint.y
-    print("X AND Y SPAWN POINT: ", currentMap.spawnPoint.x, currentMap.spawnPoint.y )
-    GM:initCollisionMatrix()
-    print("Switched to map:", newMapId)
-    print("Map dimensions:", _G.worldWidth, _G.worldHeight)
-    print("Map tiles:", currentMap.tiles and "loaded" or "not loaded")
-    print("Floor layer:", currentMap.tiles and currentMap.tiles.floor and "exists" or "does not exist")
-    GM.player.move()
+function GameMaster:executeMapSwitch()
+    local newMapId = GM.pendingMapId
+    GM:mapSwitch(newMapId)
 end
 
 function GameMaster:initiateMapSwitch(newMapId)
@@ -66,8 +53,13 @@ function GameMaster:initiateMapSwitch(newMapId)
     GM.transitionState.fadingIn = false
 end
 
-function GameMaster:executeMapSwitch()
-    local newMapId = GM.pendingMapId
+function GameMaster:mapSwitch(newMapId)
+    local oldMap = GM.mapManager.currentMap
+    if oldMap then
+        print("Current map exists")
+        oldMap.exitCoords = {x=GM.player.x, y=GM.player.y}
+        print("Exit coords?", oldMap.exitCoords.x, oldMap.exitCoords.y)
+    end
     GM.mapManager:switchMap(newMapId,GM.entityManager, GM.interactableManager)
     local currentMap = GM.mapManager.currentMap
 
@@ -77,16 +69,17 @@ function GameMaster:executeMapSwitch()
     GM.entityManager:updateDimensions(_G.worldWidth,_G.worldHeight)
     GM.entityManager:loadEntities(currentMap.entities, currentMap.persistentState.entities)
     GM.interactableManager:loadObjects(currentMap.objects, currentMap.persistentState.objects)
-    GM.player.targetX = currentMap.spawnPoint.x
-    GM.player.targetY = currentMap.spawnPoint.y
-    print("X AND Y SPAWN POINT: ", currentMap.spawnPoint.x, currentMap.spawnPoint.y )
+    if (currentMap.exitCoords and currentMap.exitCoords.x and currentMap.exitCoords.y) then
+        GM.player.targetX=currentMap.exitCoords.x
+        GM.player.targetY=currentMap.exitCoords.y
+    else
+        GM.player.targetX = currentMap.spawnPoint.x
+        GM.player.targetY = currentMap.spawnPoint.y
+    end
     GM:initCollisionMatrix()
-    print("Switched to map:", newMapId)
-    print("Map dimensions:", _G.worldWidth, _G.worldHeight)
-    print("Map tiles:", currentMap.tiles and "loaded" or "not loaded")
-    print("Floor layer:", currentMap.tiles and currentMap.tiles.floor and "exists" or "does not exist")
     GM.player.move()
 end
+
 
 -- Initialize Collision Matrix with walls, entities and player
 function GameMaster.initCollisionMatrix()

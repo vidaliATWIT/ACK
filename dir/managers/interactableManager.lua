@@ -44,7 +44,7 @@ function InteractableManager:tryUnlockDoor(player, door)
         local requiredKey = door.color
 
         local keyIndex = player:findInInventory(function(item) return item.def.color==requiredKey end)
-        print(keyIndex)
+        --print(keyIndex)
         if keyIndex then
             door.locked = false
             table.remove(player.inventory.items,keyIndex)
@@ -64,7 +64,7 @@ end
 
 -- Parse chest contents
 function parseContents(contentString)
-    print(contentString)
+    --print(contentString)
     local contents = {}
     for item in contentString:gmatch("([^,]+)") do
         local itemName, count = item:match("(.+)#(%d+)")

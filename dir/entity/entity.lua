@@ -13,7 +13,7 @@ function Entity:new(o)
     o.height = 16
     o.name = o.name or "Unnamed Entity"
     o.sprite_path=o.sprite_path or "/res/nopingu.png"
-    print(o.sprite_path)
+    --print(o.sprite_path)
     o.sprite = love.graphics.newImage(o.sprite_path)
     
     -- stats
