@@ -5,16 +5,16 @@ local Dice = require("util.Dice")
 local Enums = require("util.Enums")
 
 local MonsterTemplates = {
-    GOBLIN = {
-        name = "Goblin",
-        image = "/res/darkelf1.png",
+    SKELETON = {
+        name = "Skeleton",
+        image = "/res/skeleton1.png",
         hd = 1,
-        monsterType="goblin",
+        monsterType="skeleton",
         awarenessCooldown=3
     },
     DARKELF = {
         name = "Dark Elf",
-        image = "/res/elf1.png",
+        image = "/res/darkelf1.png",
         hd = 2,
         monsterType="elf",
         awarenessCooldown=4,

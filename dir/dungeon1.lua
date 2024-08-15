@@ -157,6 +157,64 @@ return {
       wangsets = {},
       tilecount = 256,
       tiles = {}
+    },
+    {
+      name = "monochrome_red_tileset",
+      firstgid = 1281,
+      class = "",
+      tilewidth = 16,
+      tileheight = 16,
+      spacing = 0,
+      margin = 0,
+      columns = 16,
+      image = "res/mono_tile_set.png",
+      imagewidth = 256,
+      imageheight = 256,
+      objectalignment = "unspecified",
+      tilerendersize = "tile",
+      fillmode = "stretch",
+      tileoffset = {
+        x = 0,
+        y = 0
+      },
+      grid = {
+        orientation = "orthogonal",
+        width = 16,
+        height = 16
+      },
+      properties = {},
+      wangsets = {},
+      tilecount = 256,
+      tiles = {}
+    },
+    {
+      name = "monochrome_red_tileset",
+      firstgid = 1537,
+      class = "",
+      tilewidth = 16,
+      tileheight = 16,
+      spacing = 0,
+      margin = 0,
+      columns = 16,
+      image = "res/mono_tile_set.png",
+      imagewidth = 256,
+      imageheight = 256,
+      objectalignment = "unspecified",
+      tilerendersize = "tile",
+      fillmode = "stretch",
+      tileoffset = {
+        x = 0,
+        y = 0
+      },
+      grid = {
+        orientation = "orthogonal",
+        width = 16,
+        height = 16
+      },
+      properties = {},
+      wangsets = {},
+      tilecount = 256,
+      tiles = {}
     }
   },
   layers = {
@@ -290,7 +348,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["SubType"] = "GOBLIN",
+            ["SubType"] = "SKELETON",
             ["Type"] = "MONSTER"
           }
         },
@@ -306,7 +364,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["SubType"] = "GOBLIN",
+            ["SubType"] = "SKELETON",
             ["Type"] = "MONSTER"
           }
         },
@@ -322,7 +380,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["SubType"] = "GOBLIN",
+            ["SubType"] = "SKELETON",
             ["Type"] = "MONSTER"
           }
         },
@@ -354,7 +412,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["SubType"] = "GOBLIN",
+            ["SubType"] = "SKELETON",
             ["Type"] = "MONSTER"
           }
         },
@@ -402,7 +460,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["SubType"] = "GOBLIN",
+            ["SubType"] = "SKELETON",
             ["Type"] = "MONSTER"
           }
         },
@@ -418,7 +476,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["SubType"] = "GOBLIN",
+            ["SubType"] = "SKELETON",
             ["Type"] = "MONSTER"
           }
         },
@@ -434,7 +492,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["SubType"] = "GOBLIN",
+            ["SubType"] = "SKELETON",
             ["Type"] = "MONSTER"
           }
         },
@@ -466,7 +524,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["SubType"] = "GOBLIN",
+            ["SubType"] = "SKELETON",
             ["Type"] = "MONSTER"
           }
         }

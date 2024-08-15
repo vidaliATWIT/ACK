@@ -231,9 +231,13 @@ function handleScrolling()
         scrollY = -1
     end
         
-    if scrollX ~= 0 or scrollY ~= 0 then
-        GM.offsetY=newOffsetY
+    if scrollX ~= 0 then
+        print("OFFSETs and scrollX/Y", newOffsetX, newOffsetY, scrollX, scrollY)
         GM.offsetX=newOffsetX
+    end
+    if scrollY ~= 0 then
+        GM.offsetY=newOffsetY
+        print("OFFSETs and scrollX/Y", newOffsetX, newOffsetY, scrollX, scrollY)
     end
 end
 

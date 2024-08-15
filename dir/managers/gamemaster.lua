@@ -76,6 +76,8 @@ function GameMaster:mapSwitch(newMapId)
         GM.player.targetX = currentMap.spawnPoint.x
         GM.player.targetY = currentMap.spawnPoint.y
     end
+    GM.offsetX=0
+    GM.offsetY=0
     GM:initCollisionMatrix()
     GM.player.move()
 end
