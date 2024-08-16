@@ -6,6 +6,18 @@ ItemManager = {
             value=10,
             effect=function(player) player:heal(5) end
         },
+        strengthPotion = {
+            name="Strength Potion",
+            type="consumable",
+            value=20,
+            effect=function(player) player.addStatus("strengthened", 10) end
+        },
+        strengthPotion = {
+            name="Speed Potion",
+            type="consumable",
+            value=20,
+            effect=function(player) player.addStatus("agile", 10) end
+        },
         ironSword = {
             name="Iron Sword",
             type="weapon",

@@ -140,10 +140,12 @@ function EntityManager:loadEntities(spawnPoints, persistentState)
         if entity then -- Check if we have a persistent state for this entity
             local state = persistentState[self:makeKey(spawnPoint.x,spawnPoint.y)]
             if state then
+                print("APPLYING STATE")
                 entity:applyState(state)
             end
 
             if entity:isAlive() then
+                print()
                 self:addEntity(entity)
             end
         end

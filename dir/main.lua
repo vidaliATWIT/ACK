@@ -88,7 +88,12 @@ function drawEntity(entity, isPlayer)
 
     if screenX >= 0 and screenX < love.graphics.getWidth() and screenY >= 0 and screenY < love.graphics.getHeight() then
         local sprite = isPlayer and entity.image or entity.sprite
-        love.graphics.draw(sprite, screenX, screenY, 0, scale, scale)
+        if isPlayer then
+            player:draw(sprite,screenX,screenY,0,scale)
+        else
+            love.graphics.draw(sprite, screenX, screenY, 0, scale, scale)
+        end
+
     end
 end
 

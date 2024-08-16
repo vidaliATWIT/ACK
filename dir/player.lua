@@ -8,7 +8,7 @@ local EQUIPMENT_SLOTS = {
     weapon = {field = "weapon", defaultStat="damage", defaultValue=2},
     armor = {field = "armor", defaultStat="defense", defaultValue=0}
 }
-
+local STATUS_EFFECTS = require("statusEffects")
 
 function player:load()
     player.image = love.graphics.newImage("res/pc.png")
@@ -20,6 +20,8 @@ function player:load()
     -- Stats
     player.speed=1
     player.torch_light=50
+    -- Conditions
+    player.statuses = {}
 end
 
 -- Init player stats
@@ -86,8 +88,15 @@ function player:move()
     player.x=player.targetX
 end
 
-function player:draw()
-    love.graphics.draw(player.image,player.x, player.y, 0, scale, scale)
+function player:draw(sprite,screenX,screenY,num,scale)
+    love.graphics.draw(sprite, screenX, screenY, num, scale, scale)
+    local i=0
+    local width = love.graphics.getWidth()/2
+    for status, data in pairs(self.statuses) do --HACKY SOLUTION SO FAR
+        love.graphics.setColor(love.math.colorFromBytes(37,190,26))
+        love.graphics.print(data.statusString, width + (i)*20, 10)
+        i = i+1
+    end
 end
 
 function player:heal(amount)
@@ -201,7 +210,47 @@ function player:getInventory()
             table.insert(inventoryTable, index .. ") " .. properties.name .."\n")
         end
     end
+    table.insert(inventoryTable, "Gold: " .. self.inventory.gold)
     return inventoryTable
+end
+
+function player:addStatus(status, duration)
+    if not self.statuses then self.statuses = {} end
+    local statusEffect = STATUS_EFFECTS[status]
+    self.statuses[status] = {
+        duration = duration,
+        effect = statusEffect.effect,
+        onApply = statusEffect.onApply,
+        onRemove = statusEffect.onRemove,
+        statusString = statusEffect.statusString,
+    }
+    if self.statuses[status].onApply then
+        self.statuses[status].onApply(self)
+    end
+end
+
+function player:removeStatus(status)
+    if self.statuses and self.statuses[status] then
+        if self.statuses[status].onRemove then
+            self.statuses[status].onRemove(self)
+        end
+        self.statuses[status] = nil
+    end
+end
+
+function player:updateStatuses()
+    if not self.statuses then return end
+    for status, data in pairs(self.statuses) do
+        if data.duration > 0 then
+            print("EFFECTED!!!!")
+            data.duration = data.duration - 1
+            if data.effect then
+                data.effect(self)
+            end
+        else
+            self:removeStatus(status)
+        end
+    end
 end
 
 function player:getPrimaryStats()

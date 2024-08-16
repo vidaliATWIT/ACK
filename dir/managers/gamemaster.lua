@@ -109,6 +109,7 @@ function GameMaster.nextTurn()
     -- clear dialog bubbles
     local entities = GM.entityManager:getAllEntities()
     local player_pos = {x=GM.player.x, y=GM.player.y}
+    GM.player:updateStatuses()
     for _, entity in pairs(entities) do
         if GM.heuristic(entity:getPosition(), player_pos) < 10 then
             GM.handleEntityTurn(entity)

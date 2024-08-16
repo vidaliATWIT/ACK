@@ -91,7 +91,6 @@ function UI:showGameOver()
     self.state="gameover"
 end
 
-
 function UI:drawGameOver()
     local height = love.graphics.getHeight()
     local width = love.graphics.getWidth()
@@ -156,11 +155,10 @@ function UI:drawInventory()
     for i, item in ipairs(usableItems) do
         love.graphics.print(item, 10, 40 + (i-1)*20)
     end
-    separatorY = 40 + #usableItems * 20
+    separatorY = 45 + #usableItems * 20
     if (#usableItems~=0) then
         love.graphics.line(10, separatorY, 200, separatorY)  -- Adjust width as needed
     end
-    
     for i, info in ipairs(otherItems) do
         love.graphics.print(info, 10, separatorY + 10 + (i-1)*20)
     end

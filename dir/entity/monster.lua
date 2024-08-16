@@ -10,7 +10,8 @@ local MonsterTemplates = {
         image = "/res/skeleton1.png",
         hd = 1,
         monsterType="skeleton",
-        awarenessCooldown=3
+        awarenessCooldown=3,
+        ability={poisonChance=20,duration=3}
     },
     DARKELF = {
         name = "Dark Elf",
@@ -36,7 +37,8 @@ function monster:new(templateName, x, y)
         sprite_path=template.image,
         hd=template.hd,
         monsterType=template.monsterType,
-        maxAwarenessCooldown=template.awarenessCooldown
+        maxAwarenessCooldown=template.awarenessCooldown,
+        ability=template.ability
     })
     setmetatable(o,self)
     self.__index=self
@@ -108,6 +110,9 @@ function monster:attack(player)
         local baseDmg = monster_dmg[self.hd]
         local rawDamage = Dice.roll(baseDmg)
         local finalDamage = math.max(0, rawDamage-player.defense)
+        if self.ability.poisonChance and Dice.rollUnder(self.ability.poisonChance) then -- Wrap this in a helper function
+            player:addStatus("poisoned", self.ability.duration)
+        end
         player:takeDamage(finalDamage)
         return true, finalDamage
     end
@@ -130,7 +135,7 @@ function monster:applyState(state)
     self.hp=state.hp
     self.max_hp = state.max_hp
     self.state="IDLE"
-    self.awareCooldown=maxAwarenessCooldown
+    self.awareCooldown=state.maxAwarenessCooldown
 end
 
 function monster:getState()
