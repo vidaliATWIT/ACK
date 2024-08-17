@@ -24,9 +24,9 @@ function GameMaster.initialize(useHashTable, worldWidth, worldHeight, map, playe
     GM.offsetY=0
     GM.player=player
     GM.mapManager = MapManager
+    GM.mapManager:initialize()
     GM.mapManager:loadMap("town1",'town1.lua')
     GM.mapManager:loadMap("dungeon1",'dungeon1.lua')
-    print("DOES OUR MAP EXIST? ", GM.mapManager.maps["dungeon1"])
     GM.entityManager = EntityManager.new(true,1,1,nil)
     GM.interactableManager = InteractableManager:new(nil)
     GM.transitionState={active=false,alpha=0,fadingIn=false}
@@ -56,9 +56,7 @@ end
 function GameMaster:mapSwitch(newMapId)
     local oldMap = GM.mapManager.currentMap
     if oldMap then
-        print("Current map exists")
         oldMap.exitCoords = {x=GM.player.x, y=GM.player.y}
-        print("Exit coords?", oldMap.exitCoords.x, oldMap.exitCoords.y)
     end
     GM.mapManager:switchMap(newMapId,GM.entityManager, GM.interactableManager)
     local currentMap = GM.mapManager.currentMap
@@ -67,7 +65,12 @@ function GameMaster:mapSwitch(newMapId)
     _G.worldHeight = currentMap.height
 
     GM.entityManager:updateDimensions(_G.worldWidth,_G.worldHeight)
-    GM.entityManager:loadEntities(currentMap.entities, currentMap.persistentState.entities)
+    --GM.mapManager.currentMap:loadEntities(GM.entityManager)
+    if (currentMap.currentEntities) then -- The or is because currentEntities is nil first round, but once passed, it might not be!!!
+        GM.entityManager.world = currentMap.currentEntities
+    else
+        GM.entityManager:loadEntities(currentMap.initialEntities, currentMap.persistentState.entities)
+    end 
     GM.interactableManager:loadObjects(currentMap.objects, currentMap.persistentState.objects)
     if (currentMap.exitCoords and currentMap.exitCoords.x and currentMap.exitCoords.y) then
         GM.player.targetX=currentMap.exitCoords.x
@@ -122,8 +125,7 @@ end
 -- Handles turns for entities by checking state, getting relevant world information and passing onto entities to further allocate their actions
 function GameMaster.handleEntityTurn(entity)
     local next_move = nil
-    print("Entity name and state: ", entity.name, entity.state)
-    print(entity.type)
+    print("Entity name and state and X/Y : ", entity.name, entity.state, entity.x, entity.y)
     if (entity.type==Enums.EntityType.MONSTER) then
         GM.handleStateTransition(entity)
 
@@ -174,6 +176,7 @@ function GameMaster.canMove(x,y)
         -- check if where you're moving to is walkable
         local floor = GM.getTileAt("floor",x,y)
         local entity = GM.entityManager:getEntityAt(x, y)
+        print("THERE SHOULD BE AN ENTITY HERE AT: ", entity, x,y)
         local object = GM.interactableManager:getObjectAt(x,y)
         if object ~= nil then
             local objectOpen, message = GM.interactableManager:handleInteraction(GM.player,object)
@@ -256,6 +259,7 @@ function GameMaster.handleEntityDeath(entity)
     UI:addCombatMessage(message)
     CollisionMatrix[entity.x][entity.y]=false
     GM.entityManager:removeEntity(entity) -- 
+    --GM.mapManager:removeEntity(entity, GM.entityManager)
 end
 
 function GameMaster.isGameOver()

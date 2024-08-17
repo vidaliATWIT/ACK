@@ -145,7 +145,6 @@ function EntityManager:loadEntities(spawnPoints, persistentState)
             end
 
             if entity:isAlive() then
-                print()
                 self:addEntity(entity)
             end
         end

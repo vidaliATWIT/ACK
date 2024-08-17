@@ -110,7 +110,7 @@ function monster:attack(player)
         local baseDmg = monster_dmg[self.hd]
         local rawDamage = Dice.roll(baseDmg)
         local finalDamage = math.max(0, rawDamage-player.defense)
-        if self.ability.poisonChance and Dice.rollUnder(self.ability.poisonChance) then -- Wrap this in a helper function
+        if self.ability and self.ability.poisonChance and Dice.rollUnder(self.ability.poisonChance) then -- Wrap this in a helper function
             player:addStatus("poisoned", self.ability.duration)
         end
         player:takeDamage(finalDamage)
