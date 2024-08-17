@@ -10,6 +10,8 @@ local UI = require("UI")
 local readyToQuit = false
 local gameStarted = false
 local debug=true
+local equipping=false
+local dropping=false
 
 
 function love.load()
@@ -193,13 +195,38 @@ function handleInventoryInput(key)
     if key == "escape" or key=="i" or key=="q" then
         GM.UI:hideInventory()
         GM.GameState.set("EXPLORING")
-    elseif tonumber(key) then
-        local choice = tonumber(key)
-        print(choice)
-        message = player:useItem(choice)
-        UI:addCombatMessage(message)
-        GM.UI:hideInventory()
-        GM.GameState.set("EXPLORING")
+    else
+        if not equipping and not dropping then
+            if key=="e" then
+                print("USE")
+                equipping=true
+                dropping=false
+                UI:setEquippingFlag(true)
+            elseif key =="d" then
+                print("DROP")
+                dropping=true
+                equipping=false
+                UI:setDroppingFlag(true)
+            end
+        elseif tonumber(key) then
+            
+            print("WHAT?!@")
+            local choice = tonumber(key)
+            print(choice)
+            if equipping then
+                message = player:useItem(choice)
+            elseif dropping then
+                print("LET ME DROP THIS!!!")
+                message = player:dropItem(choice)
+            else
+                message = "How did you manage to do that?"
+            end
+            equipping=false
+            dropping=false
+            UI:addCombatMessage(message)
+            GM.UI:hideInventory()
+            GM.GameState.set("EXPLORING")
+        end
     end
 end
 

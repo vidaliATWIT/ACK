@@ -27,6 +27,7 @@ function GameMaster.initialize(useHashTable, worldWidth, worldHeight, map, playe
     GM.mapManager:initialize()
     GM.mapManager:loadMap("town1",'town1.lua')
     GM.mapManager:loadMap("dungeon1",'dungeon1.lua')
+    GM.mapManager:loadMap("dungeon2",'dungeon2.lua')
     GM.entityManager = EntityManager.new(true,1,1,nil)
     GM.interactableManager = InteractableManager:new(nil)
     GM.transitionState={active=false,alpha=0,fadingIn=false}

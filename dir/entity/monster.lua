@@ -5,13 +5,21 @@ local Dice = require("util.Dice")
 local Enums = require("util.Enums")
 
 local MonsterTemplates = {
+    GOBLIN = {
+        name="Goblin",
+        image="/res/goblin1.png",
+        hd=1,
+        monsterType="goblin",
+        awarenessCooldown=3,
+        ability={multiAttackChance=4,duration=2}
+    },
     SKELETON = {
         name = "Skeleton",
         image = "/res/skeleton1.png",
         hd = 1,
         monsterType="skeleton",
         awarenessCooldown=3,
-        ability={poisonChance=20,duration=3}
+        ability={poisonChance=5,duration=3}
     },
     DARKELF = {
         name = "Dark Elf",
@@ -20,6 +28,20 @@ local MonsterTemplates = {
         monsterType="elf",
         awarenessCooldown=4,
     },
+    KNIGHT = {
+        name="Knight",
+        image="res/knight1.png",
+        hd=2,
+        monsterType="knight",
+        awarenessCooldown=10,
+    },
+    OGRE = {
+        name="Ogre",
+        image="res/ogre1.png",
+        hd=3,
+        monsterType="ogre",
+        awarenessCooldown=3,
+    }
 }
 
 monster.__index = Monster
@@ -112,6 +134,9 @@ function monster:attack(player)
         local finalDamage = math.max(0, rawDamage-player.defense)
         if self.ability and self.ability.poisonChance and Dice.rollUnder(self.ability.poisonChance) then -- Wrap this in a helper function
             player:addStatus("poisoned", self.ability.duration)
+        elseif self.ability and self.ability.multiAttackChance and Dice.rollUnder(self.ability.multiAttackChance) then -- MULTIATTACK BITCH
+            print("ATTACKED AGAIN!!!")
+            finalDamage = finalDamage+self:attack(player)[2]
         end
         player:takeDamage(finalDamage)
         return true, finalDamage

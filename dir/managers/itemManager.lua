@@ -12,7 +12,7 @@ ItemManager = {
             value=20,
             effect=function(player) player.addStatus("strengthened", 10) end
         },
-        strengthPotion = {
+        speedPotion = {
             name="Speed Potion",
             type="consumable",
             value=20,
@@ -25,12 +25,29 @@ ItemManager = {
             damage=6,
             equipped=""
         },
+        steelSword = {
+            name="Steel Sword",
+            type="weapon",
+            value=20,
+            damage=8,
+            equipped="",
+
+        },
         silverSword = {
             name="Silver Sword",
             type="weapon",
             value=200,
             damage=12,
-            equipped=""
+            equipped="",
+            ability={type="BLESSED"}
+        },
+        poisonedDagger = {
+            name="Poisoned Dagger",
+            type="weapon",
+            value=200,
+            damage=4,
+            equipped="",
+            ability={type="POISONED",10}
         },
         leatherArmor = {
             name="Leather Armor",
@@ -44,6 +61,20 @@ ItemManager = {
             type="armor",
             value=40,
             defense=4,
+            equipped=""
+        },
+        plateArmor = {
+            name="Plate Armor",
+            type="armor",
+            value=90,
+            defense=6,
+            equipped=""
+        },
+        silverArmor = {
+            name="Silver Armor",
+            type="armor",
+            value=300,
+            defense=9,
             equipped=""
         },
         redKey = { name="Red Key", type="key", value=0, color="red" },

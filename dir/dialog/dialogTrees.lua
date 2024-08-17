@@ -155,7 +155,151 @@ local DialogTrees = {
             text = "Goodbye now stranger.",
             options = {}
         }
-    }
+    },
+    Mona = {
+        greeting = genericGreeting("Mona"),
+        greetingNew = {
+            text = "Hello stranger. I can teach you FINESSE, but I have to charge.",
+            options = {
+                {text = "Teach me something new!", next="teach_options"},
+                {text = "Uhh, no thanks. Bye.", next="exit"}
+            }
+        },
+        greetingKnown = {
+            text = "Hello again. I can teach you FINESSE, but I have to charge.",
+            options = {
+                {text = "Teach me something new!", 
+                next=function(player)
+                    print("PLAYER FINESSE: ", player.finesse)
+                    if player.finesse>16 then
+                        return "too_strong"
+                    else
+                        return "teach_options"
+                    end
+                end},
+                {text = "Uhh, no thanks. Bye.", next="exit"}
+            }
+        },
+        teach_options = {
+            text = function(player)
+                    return string.format("The training will cost %d gold. Do you accept?", getTrainingCost(player.force))
+            end,
+            options = {
+                {text = "Yes, teach me this.", 
+                next=function(player)
+                    local gold = player.inventory.gold
+                    print("Player cash: ", gold)
+                    if (gold<getTrainingCost(player.force)) then
+                        print("We're too poor...")
+                        return "too_poor"
+                    else
+                        return "combat_training"
+                    end
+                end},
+                {text = "I'm too tired today maybe tomorrow. Bye.", next="exit"}
+            }
+        },
+        combat_training = {
+            text = "Good. First up some jumping jacks to warm up...",
+            options = {
+                {text = "I see... teach me more...", next = "exit"}
+            },
+            effect = function(player)
+                player.finesse=player.finesse+1
+                player:removeGold(getTrainingCost(player.finesse))
+                print(player.name,  " improved his finesse... ", player.finesse)
+            end
+        },
+        too_strong = {
+            text = "I have already taught you all I know.",
+            options = {
+                {text = "I see. Goodbye.", next="exit"}
+            }
+        },
+        too_poor = {
+            text = function(player) return string.format("You need %s gold to pay for this training...", getTrainingCost(player.finesse)) end,
+            options = {
+                {text = "I see. Goodbye.", next="exit"}
+            }
+        },
+        exit = {
+            text = "Goodbye now stranger.",
+            options = {}
+        }
+    },
+    Ania = {
+        greeting = genericGreeting("Ania"),
+        greetingNew = {
+            text = "Hello stranger. I can train your HARDINESS, but I have to charge.",
+            options = {
+                {text = "Teach me something new!", next="teach_options"},
+                {text = "Uhh, no thanks. Bye.", next="exit"}
+            }
+        },
+        greetingKnown = {
+            text = "Hello again. I can teach you, but I have to charge.",
+            options = {
+                {text = "Teach me something new!", 
+                next=function(player)
+                    print("PLAYER FORCE: ", player.hardiness)
+                    if player.hardiness>16 then
+                        return "too_strong"
+                    else
+                        return "teach_options"
+                    end
+                end},
+                {text = "Uhh, no thanks. Bye.", next="exit"}
+            }
+        },
+        teach_options = {
+            text = function(player)
+                    return string.format("The training will cost %d gold. Do you accept?", getTrainingCost(player.hardiness))
+            end,
+            options = {
+                {text = "Yes, teach me this.", 
+                next=function(player)
+                    local gold = player.inventory.gold
+                    print("Player cash: ", gold)
+                    if (gold<getTrainingCost(player.hardiness)) then
+                        print("We're too poor...")
+                        return "too_poor"
+                    else
+                        return "combat_training"
+                    end
+                end},
+                {text = "I'm too tired today maybe tomorrow. Bye.", next="exit"}
+            }
+        },
+        combat_training = {
+            text = "Good. You've got to learn to take things in stride...",
+            options = {
+                {text = "I see... teach me more...", next = "exit"}
+            },
+            effect = function(player)
+                player.hardiness=player.hardiness+1
+                player:setMaxHPFromHardiness()
+                player.hp = player.max_hp
+                player:removeGold(getTrainingCost(player.hardiness))
+                print(player.name,  " improved his HARDINESS... ", player.hardiness)
+            end
+        },
+        too_strong = {
+            text = "I have already taught you all I know.",
+            options = {
+                {text = "I see. Goodbye.", next="exit"}
+            }
+        },
+        too_poor = {
+            text = function(player) return string.format("You need %s gold to pay for this training...", getTrainingCost(player.hardiness)) end,
+            options = {
+                {text = "I see. Goodbye.", next="exit"}
+            }
+        },
+        exit = {
+            text = "Goodbye now stranger.",
+            options = {}
+        }
+    },
 }
 
 return DialogTrees

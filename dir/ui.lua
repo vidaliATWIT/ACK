@@ -3,7 +3,7 @@ local UI = {
     dialogOptions = {},
     combatLog = {},
     inventoryTable={},
-    statTable={}
+    statTable={},
 }
 
 function UI:initialize()
@@ -15,6 +15,8 @@ function UI:initialize()
     self.menuFont = love.graphics.newFont(24)
     self.infoFont = love.graphics.newFont(18)
     self.hp = 0
+    self.equipping = false
+    self.dropping = false
 end
 
 function UI:addCombatMessage(message)
@@ -35,6 +37,14 @@ function UI:showDialog(text, options)
     self.state="dialog"
 end
 
+function UI:setEquippingFlag(flag)
+    self.equipping=flag
+end
+
+function UI:setDroppingFlag(flag)
+    self.dropping=flag
+end
+
 function UI:hideDialog()
     self.state=""
     self.dialogText=""
@@ -52,6 +62,8 @@ function UI:hideInventory()
     self.isShowingInventory=false
     self.state=""
     self.inventoryTable={}
+    self.dropping=false
+    self.equipping=false
 end
 
 function UI:showCharsheet(statTable)
@@ -140,6 +152,13 @@ end
 
 function UI:drawInventory()
     love.graphics.print("INVENTORY",10,10)
+    if (self.equipping) then
+        love.graphics.print("(Equip?): Select (#) to equip", string.len("INVENTORY")*18,10)
+    elseif (self.dropping) then
+        love.graphics.print("(Drop?): Select (#) to equip", string.len("INVENTORY")*18,10)
+    else
+        love.graphics.print("E)quip or D)rop. Any key to exit prompt...", string.len("INVENTORY")*18,10)
+    end
     local usableItems = {}
     local otherItems = {}
     for i, item in ipairs(self.inventoryTable) do
@@ -150,7 +169,7 @@ function UI:drawInventory()
         end
     end
     local separatorY = 30
-    love.graphics.line(10, separatorY, 200, separatorY)
+    love.graphics.line(10, separatorY, string.len("INVENTORY")*14, separatorY)
 
     for i, item in ipairs(usableItems) do
         love.graphics.print(item, 10, 40 + (i-1)*20)

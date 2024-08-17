@@ -36,12 +36,12 @@ function player:init(o)
     player.y = o.y or player.y
     -- Base Stats
     player.speed=o.speed or 1
-    player.max_hp=o.max_hp or 8
+    player.force=o.force or 17
+    player.finesse=o.finesse or 17
+    player.contemplation=o.contemplation or 17
+    player.hardiness=o.hardiness or 17
+    player:setMaxHPFromHardiness()
     player.hp=player.max_hp
-    player.force=o.force or 14
-    player.finesse=o.finesse or 14
-    player.contemplation=o.contemplation or 14
-    player.hardiness=o.hardiness or 14
     -- "Equipment" Stats
     player.inventory={
         items={},
@@ -109,6 +109,11 @@ function player:attack(entity)
         local baseDmg = player.damage + player.getBonus(player.force)
         local rawDamage = Dice.roll(baseDmg)
         local finalDamage = math.max(0, rawDamage-entity.defense)
+        if player.weapon.ability and player.weapon.ability.type=="BLESSED" then -- BANISH UNDEAD
+            if entity.monsterType and entity.monsterType=="skeleton" then
+                finalDamage = entity.max_hp
+            end
+        end
         entity:takeDamage(finalDamage)
         return true, finalDamage
     end
@@ -119,7 +124,7 @@ function player:addItem(itemName,itemDef,count)
     count = count or 1
     local addedCount = 0
     for i=1, count do
-        if #self.inventory.items < self.force then
+        if #self.inventory.items < 10 then
             table.insert(self.inventory.items, {name=itemDef.name, def=itemDef})
             addedCount = addedCount+1
         else
@@ -150,6 +155,21 @@ function player:useItem(index)
         return self:toggleEquipItem(item)
     end
     return "Cannot use that"
+end
+
+function player:dropItem(index)
+    local item = self.inventory.items[index]
+    if not item then return "Not a droppable item." end
+    if item.def.type~="key" then
+        if self.weapon==item or self.armor==item then
+            return "Cannot drop that, it is currently equipped!"
+        else
+            self:removeItem(index)
+            return "Dropped " .. item.name
+        end
+    else
+        return "Can't drop keys..."
+    end
 end
 
 function player:toggleEquipItem(item)
@@ -353,6 +373,11 @@ end
 
 function player:setHardiness(hardiness)
     player.hardiness=hardiness
+end
+
+function player:setMaxHPFromHardiness()
+    player.max_hp = math.floor(((player.hardiness/5)+.5)*8)
+    player.hp=player.max_hp
 end
 
 function player:setArmor(armor)

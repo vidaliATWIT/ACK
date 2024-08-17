@@ -10,7 +10,7 @@ return {
   tilewidth = 16,
   tileheight = 16,
   nextlayerid = 8,
-  nextobjectid = 38,
+  nextobjectid = 42,
   properties = {},
   tilesets = {
     {
@@ -157,6 +157,64 @@ return {
       wangsets = {},
       tilecount = 256,
       tiles = {}
+    },
+    {
+      name = "monochrome_red_tileset",
+      firstgid = 1281,
+      class = "",
+      tilewidth = 16,
+      tileheight = 16,
+      spacing = 0,
+      margin = 0,
+      columns = 16,
+      image = "res/mono_tile_set.png",
+      imagewidth = 256,
+      imageheight = 256,
+      objectalignment = "unspecified",
+      tilerendersize = "tile",
+      fillmode = "stretch",
+      tileoffset = {
+        x = 0,
+        y = 0
+      },
+      grid = {
+        orientation = "orthogonal",
+        width = 16,
+        height = 16
+      },
+      properties = {},
+      wangsets = {},
+      tilecount = 256,
+      tiles = {}
+    },
+    {
+      name = "monochrome_red_tileset",
+      firstgid = 1537,
+      class = "",
+      tilewidth = 16,
+      tileheight = 16,
+      spacing = 0,
+      margin = 0,
+      columns = 16,
+      image = "res/mono_tile_set.png",
+      imagewidth = 256,
+      imageheight = 256,
+      objectalignment = "unspecified",
+      tilerendersize = "tile",
+      fillmode = "stretch",
+      tileoffset = {
+        x = 0,
+        y = 0
+      },
+      grid = {
+        orientation = "orthogonal",
+        width = 16,
+        height = 16
+      },
+      properties = {},
+      wangsets = {},
+      tilecount = 256,
+      tiles = {}
     }
   },
   layers = {
@@ -187,7 +245,7 @@ return {
         0, 5, 0, 5, 5, 5, 5, 5, 5, 5, 5, 0, 5, 5, 5, 5, 5, 0, 0, 0, 0, 0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 0,
         0, 5, 0, 0, 72, 0, 0, 0, 0, 72, 0, 0, 5, 5, 5, 5, 5, 0, 0, 0, 0, 0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 0,
         0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 5, 0,
-        0, 5, 5, 0, 5, 4, 5, 5, 5, 5, 5, 5, 5, 4, 5, 5, 5, 0, 0, 0, 0, 0, 5, 0, 0, 5, 5, 5, 5, 0, 5, 0,
+        0, 5, 5, 0, 5, 0, 5, 0, 5, 0, 5, 5, 5, 4, 5, 5, 5, 0, 0, 0, 0, 0, 5, 0, 0, 5, 5, 5, 5, 0, 5, 0,
         0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 0, 0, 0, 0, 0, 5, 0, 5, 5, 5, 5, 5, 0, 5, 0,
         0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 4, 5, 5, 5, 5, 4, 5, 0, 0, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0, 5, 0,
         0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 0, 0, 0, 0, 0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 0,
@@ -283,15 +341,15 @@ return {
           name = "",
           type = "",
           shape = "point",
-          x = 96,
-          y = 240,
+          x = 80,
+          y = 176,
           width = 0,
           height = 0,
           rotation = 0,
           visible = true,
           properties = {
-            ["Name"] = "Lea",
-            ["SubType"] = "MOOK",
+            ["Name"] = "Mona",
+            ["SubType"] = "TRAINER",
             ["Type"] = "NPC"
           }
         },
@@ -308,6 +366,40 @@ return {
           visible = true,
           properties = {
             ["Name"] = "Aimee",
+            ["SubType"] = "MOOK",
+            ["Type"] = "NPC"
+          }
+        },
+        {
+          id = 39,
+          name = "",
+          type = "",
+          shape = "point",
+          x = 48,
+          y = 176,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["Name"] = "Lea",
+            ["SubType"] = "TRAINER",
+            ["Type"] = "NPC"
+          }
+        },
+        {
+          id = 40,
+          name = "",
+          type = "",
+          shape = "point",
+          x = 112,
+          y = 176,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["Name"] = "Ania",
             ["SubType"] = "TRAINER",
             ["Type"] = "NPC"
           }
@@ -341,7 +433,7 @@ return {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 68, 0, 0, 0, 0, 68, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 797, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 29, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 797, 0, 1309, 0, 1309, 0, 1309, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 29, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 68, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -421,7 +513,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["Content"] = "gold#5,ironSword#1,redKey#1,leatherArmor#1,healthPotion#4",
+            ["Content"] = "gold#40,ironSword#1,redKey#1,greenKey#1,leatherArmor#1,healthPotion#4",
             ["Locked"] = false,
             ["Opened"] = false,
             ["Type"] = "CHEST"
@@ -619,7 +711,7 @@ return {
           name = "",
           type = "",
           shape = "point",
-          x = 384,
+          x = 80,
           y = 144,
           width = 0,
           height = 0,
@@ -683,6 +775,24 @@ return {
             ["Color"] = "",
             ["Locked"] = false,
             ["NextMap"] = "dungeon1",
+            ["Type"] = "EXIT"
+          }
+        },
+        {
+          id = 38,
+          name = "",
+          type = "",
+          shape = "point",
+          x = 380,
+          y = 142.667,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["Color"] = "",
+            ["Locked"] = false,
+            ["NextMap"] = "dungeon2",
             ["Type"] = "EXIT"
           }
         }
