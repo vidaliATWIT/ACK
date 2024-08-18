@@ -134,8 +134,9 @@ local DialogTrees = {
                 {text = "I see... teach me more...", next = "exit"}
             },
             effect = function(player)
-                player.force=player.force+1
                 player:removeGold(getTrainingCost(player.force))
+                player.force=player.force+1
+                print("PLAYER FORCE", player.force)
                 print(player.name,  " got better at swinging his sword... ", player.force)
             end
         },
@@ -205,8 +206,8 @@ local DialogTrees = {
                 {text = "I see... teach me more...", next = "exit"}
             },
             effect = function(player)
-                player.finesse=player.finesse+1
                 player:removeGold(getTrainingCost(player.finesse))
+                player.finesse=player.finesse+1
                 print(player.name,  " improved his finesse... ", player.finesse)
             end
         },
@@ -276,10 +277,10 @@ local DialogTrees = {
                 {text = "I see... teach me more...", next = "exit"}
             },
             effect = function(player)
+                player:removeGold(getTrainingCost(player.hardiness))
                 player.hardiness=player.hardiness+1
                 player:setMaxHPFromHardiness()
                 player.hp = player.max_hp
-                player:removeGold(getTrainingCost(player.hardiness))
                 print(player.name,  " improved his HARDINESS... ", player.hardiness)
             end
         },

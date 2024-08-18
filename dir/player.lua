@@ -36,16 +36,16 @@ function player:init(o)
     player.y = o.y or player.y
     -- Base Stats
     player.speed=o.speed or 1
-    player.force=o.force or 17
-    player.finesse=o.finesse or 17
-    player.contemplation=o.contemplation or 17
-    player.hardiness=o.hardiness or 17
+    player.force=o.force or 16
+    player.finesse=o.finesse or 16
+    player.contemplation=o.contemplation or 16
+    player.hardiness=o.hardiness or 16
     player:setMaxHPFromHardiness()
     player.hp=player.max_hp
     -- "Equipment" Stats
     player.inventory={
         items={},
-        gold=5000
+        gold=20000
     }
     player.armor={}
     player.weapon={}
