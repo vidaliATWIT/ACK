@@ -15,6 +15,7 @@ local DialogManager = require("managers.DialogManager")
 local InteractableManager = require("managers.InteractableManager")
 local GameState = require("managers.gameState")
 local MapManager = require("map/map")
+local SoundManager = require("managers.soundManager")
 
 -- Controls all aspects of game logic and accesess map, player and entity locations on map
 function GameMaster.initialize(useHashTable, worldWidth, worldHeight, map, player)
@@ -28,9 +29,12 @@ function GameMaster.initialize(useHashTable, worldWidth, worldHeight, map, playe
     GM.mapManager:loadMap("town1",'town1.lua')
     GM.mapManager:loadMap("dungeon1",'dungeon1.lua')
     GM.mapManager:loadMap("dungeon2",'dungeon2.lua')
+    GM.mapManager:loadMap("dungeon3",'dungeon3.lua')
     GM.entityManager = EntityManager.new(true,1,1,nil)
     GM.interactableManager = InteractableManager:new(nil)
     GM.transitionState={active=false,alpha=0,fadingIn=false}
+
+    SoundManager:load()
 
     GM.UI=UI
     GM.GameState=GameState
@@ -83,7 +87,7 @@ function GameMaster:mapSwitch(newMapId)
     GM.offsetX=0
     GM.offsetY=0
     GM:initCollisionMatrix()
-    GM.player.move()
+    GM.player:move()
 end
 
 
@@ -184,9 +188,11 @@ function GameMaster.canMove(x,y)
             if message then
                 if string.find(message,"SWITCHMAP") then -- EXIT
                     local nextMap = string.match(message, "^([^:]+)")
+                    SoundManager:playDescend()
                     GM:initiateMapSwitch(nextMap)
                     print(nextMap)
                 else
+                    SoundManager:playOpen()
                     UI:addCombatMessage(message)
                 end
             end
@@ -226,9 +232,11 @@ function GameMaster.handleInteraction(entity, player)
         --print(entity.name, " HP: ", entity.hp)
         GM.displayHit(hit, damage, GM.player.name, entity.name)
         if entity:isAlive()==false then
+            SoundManager:playDeath()
             GM.handleEntityDeath(entity)
         end
     elseif interaction.type=="dialog" then
+        SoundManager:playTalk()
         DialogManager:startDialog(entity)
         GM.displayDialog()
         GM.GameState.set("DIALOG")

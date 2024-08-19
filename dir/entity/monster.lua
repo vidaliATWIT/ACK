@@ -3,6 +3,7 @@ local monster = setmetatable({}, {__index = Entity})
 local monster_dmg = {4, 6, 8, 10, 12, 12, 16, 18, 10, 22}
 local Dice = require("util.Dice")
 local Enums = require("util.Enums")
+local SoundManager = require("managers.soundManager")
 
 local MonsterTemplates = {
     GOBLIN = {
@@ -35,13 +36,36 @@ local MonsterTemplates = {
         monsterType="knight",
         awarenessCooldown=10,
     },
+    MARAUDER = {
+        name="Marauder",
+        image="res/marauder1.png",
+        hd=2,
+        monsterType="knight",
+        awarenessCooldown=8,
+        ability={poisonChance=10,duration=3}
+    },
+    KNIGHTCHAMP = {
+        name="Knight Champion",
+        image="res/knightChampion1.png",
+        hd=3,
+        monsterType="knight",
+        awarenessCooldown=10,
+    },
     OGRE = {
         name="Ogre",
         image="res/ogre1.png",
         hd=3,
         monsterType="ogre",
         awarenessCooldown=3,
-    }
+    },
+    OGREKNIGHT = {
+        name="Ogre",
+        image="res/ogre1.png",
+        hd=2,
+        monsterType="ogre",
+        awarenessCooldown=3,
+        ability={multiAttackChance=10,duration=2}
+    },
 }
 
 monster.__index = Monster
@@ -129,6 +153,7 @@ end
 
 function monster:attack(player)
     if Dice.rollUnder(player.finesse) then
+        SoundManager:playHit()
         local baseDmg = monster_dmg[self.hd]
         local rawDamage = Dice.roll(baseDmg)
         local finalDamage = math.max(0, rawDamage-player.defense)
@@ -136,7 +161,7 @@ function monster:attack(player)
             player:addStatus("poisoned", self.ability.duration)
         elseif self.ability and self.ability.multiAttackChance and Dice.rollUnder(self.ability.multiAttackChance) then -- MULTIATTACK BITCH
             print("ATTACKED AGAIN!!!")
-            finalDamage = finalDamage+self:attack(player)[2]
+            finalDamage = self.ability.duration*rawDamage
         end
         player:takeDamage(finalDamage)
         return true, finalDamage

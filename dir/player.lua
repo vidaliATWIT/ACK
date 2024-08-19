@@ -3,6 +3,7 @@ local player = {}
 local config = require("util.conf")
 local scale = config.scale_factor
 local Dice = require("util.Dice")
+local SoundManager = require("managers.soundManager")
 local Bonuses = {}
 local EQUIPMENT_SLOTS = {
     weapon = {field = "weapon", defaultStat="damage", defaultValue=2},
@@ -117,6 +118,7 @@ function player:attack(entity)
         entity:takeDamage(finalDamage)
         return true, finalDamage
     end
+    SoundManager:playMiss()
     return false, 0
 end
 

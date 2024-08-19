@@ -12,6 +12,7 @@ local gameStarted = false
 local debug=true
 local equipping=false
 local dropping=false
+local SoundManager = require("managers.soundManager")
 
 
 function love.load()
@@ -23,6 +24,9 @@ function love.load()
 
     -- Map Setup
     sti = require 'lib/sti'
+
+    -- Set Title
+    love.window.setTitle("ACK!")
 
     if debug then
         resetGame()
@@ -186,6 +190,7 @@ function handleExplorationInput(key)
     local targetX, targetY = player:keypressed(key) -- screen coords
 
     if GM.canMove(targetX, targetY) then
+        SoundManager:playWalk()
         player:move()
     end
     GM.nextTurn()
