@@ -1,5 +1,6 @@
 local dialogTrees = require("dialog.DialogTrees")
 local player = require("player")
+local SoundManager = require("managers.soundManager")
 
 local DialogManager = {
     currentNPC=nil,
@@ -44,6 +45,8 @@ function DialogManager:choose(optionIndex)
     if type(nextDialog) == "function" then
         nextDialog = nextDialog(player)
     end
+
+    SoundManager:playClick()
 
     self.currentDialog = self:resolveDialog(dialogTrees[self.currentNPC.name][nextDialog])
 

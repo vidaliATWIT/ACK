@@ -1,6 +1,8 @@
 --Look into sysl-text later, it probably handles this stuff a lot better.
 
-local trainingCost = {[10]=50,[11]=100,[12]=150,[13]=250,[14]=500,[15]=1000,[16]=2000,[17]=3500}
+local UI = require("UI")
+
+local trainingCost = {[10]=100,[11]=150,[12]=250,[13]=500,[14]=1000,[15]=2000,[16]=3500}
 
 local function genericGreeting(npcName)
     return function(player)
@@ -40,8 +42,82 @@ local function getTrainingCost(player_skill)
     return trainingCost[player_skill]
 end
 
+local function handleTraining(player, statname, cost)
+    player:removeGold(cost)
+    player[statname]=player[statname]+1
+    message = player.name ..  " increased their " .. statname .. " by 1 point (" .. player[statname] .. ")"
+    UI:addCombatMessage(message)
+end
+
 
 local DialogTrees = {
+    Priest = {
+        greeting = genericGreeting("Priest"),
+        greetingNew = {
+            text = "Hello stranger. If you intend to explore the dungeons in town, I may offer some advice.",
+            options = {
+                {text = "Certainly, what would you suggest?", next="advice"},
+                {text = "I think not, goodbye.", next="exit"}
+            }
+        },
+        greetingKnown = {
+            text = "Hello again. Back for some advice?",
+            options = {
+                {text = "Alright, let's hear it.", next="advice"},
+                {text = "I think not, goodbye.", next="exit"}
+            }
+        },
+        advice = {
+            text = "What would you like to know?",
+            options = {
+                {text = "Where can I find equipment?", next="gear"},
+                {text = "How do I open the doors to the dungeons?", next="doors"},
+                {text = "What kind of monsters will I face?", next="monsters"},
+                {text = "How do I improve my skills?", next="skills"},
+                {text = "Where are the dungeons?", next="dungeons"},
+                {text = "I don't have any more questions. Goodbye.", next="exit"}
+            }
+        },
+        gear = {
+            text = "Chests contain all sorts of useful equipment. The one in the corner here should get you started for now.",
+            options = {
+                {text = "Thanks. Can I ask you something else?", next="advice"},
+                {text = "Understood. Goodbye now.", next="exit"},
+            }
+        },
+        doors = {
+            text = "You will need keys of the matching color. The first key you'll find in town. The rest will be in the dungeons.",
+            options = {
+                {text = "Thanks. Can I ask you something else?", next="advice"},
+                {text = "Understood. Goodbye now.", next="exit"},
+            }
+        },
+        monsters = {
+            text = "The monsters you'll face are dangerous, only getting more powerful in each subsequent dungeon.",
+            options = {
+                {text = "Thanks. Can I ask you something else?", next="advice"},
+                {text = "Understood. Goodbye now.", next="exit"},
+            }
+        },
+        skills = {
+            text = "There are three trainers in town who will train your skills, for a cost.",
+            options = {
+                {text = "Can I ask you something else?", next="advice"},
+                {text = "Understood. Goodbye now.", next="exit"},
+            }
+        },
+        dungeons = {
+            text = "There are three dungeons on the east side of town, each more treacherous than the last.",
+            options = {
+                {text = "Can I ask you something else?", next="advice"},
+                {text = "Understood. Goodbye now.", next="exit"},
+            }
+        },
+        exit = {
+            text = "Goodbye now stranger.",
+            options = {}
+        }
+    },
     Aimee = {
         greeting = function(player)
             if player:hasMetNPC("Aimee") then
@@ -88,14 +164,14 @@ local DialogTrees = {
     Lea = {
         greeting = genericGreeting("Lea"),
         greetingNew = {
-            text = "Hello stranger. I can teach you, but I have to charge.",
+            text = "Hello stranger. I can train your FORCE, but it will cost you.",
             options = {
                 {text = "Teach me something new!", next="teach_options"},
                 {text = "Uhh, no thanks. Bye.", next="exit"}
             }
         },
         greetingKnown = {
-            text = "Hello again. I can teach you, but I have to charge.",
+            text = "Hello again. I can train your FORCE, but it will cost you.",
             options = {
                 {text = "Teach me something new!", 
                 next=function(player)
@@ -134,10 +210,11 @@ local DialogTrees = {
                 {text = "I see... teach me more...", next = "exit"}
             },
             effect = function(player)
-                player:removeGold(getTrainingCost(player.force))
-                player.force=player.force+1
-                print("PLAYER FORCE", player.force)
-                print(player.name,  " got better at swinging his sword... ", player.force)
+                handleTraining(player, "force", getTrainingCost(player.force))
+                --player:removeGold(getTrainingCost(player.force))
+                --player.force=player.force+1
+                --print("PLAYER FORCE", player.force)
+                --print(player.name,  " got better at swinging his sword... ", player.force)
             end
         },
         too_strong = {
@@ -206,9 +283,10 @@ local DialogTrees = {
                 {text = "I see... teach me more...", next = "exit"}
             },
             effect = function(player)
-                player:removeGold(getTrainingCost(player.finesse))
-                player.finesse=player.finesse+1
-                print(player.name,  " improved his finesse... ", player.finesse)
+                handleTraining(player, "finesse", getTrainingCost(player.finesse))
+                --player:removeGold(getTrainingCost(player.finesse))
+                --player.finesse=player.finesse+1
+                --print(player.name,  " improved his finesse... ", player.finesse)
             end
         },
         too_strong = {
@@ -277,11 +355,12 @@ local DialogTrees = {
                 {text = "I see... teach me more...", next = "exit"}
             },
             effect = function(player)
-                player:removeGold(getTrainingCost(player.hardiness))
-                player.hardiness=player.hardiness+1
+                handleTraining(player, "hardiness", getTrainingCost(player.hardiness))
+                --player:removeGold(getTrainingCost(player.hardiness))
+                --player.hardiness=player.hardiness+1
                 player:setMaxHPFromHardiness()
                 player.hp = player.max_hp
-                print(player.name,  " improved his HARDINESS... ", player.hardiness)
+                --print(player.name,  " improved his HARDINESS... ", player.hardiness)
             end
         },
         too_strong = {

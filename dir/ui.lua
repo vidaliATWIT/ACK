@@ -34,6 +34,7 @@ function UI:showDialog(text, options)
     love.graphics.setFont(self.infoFont)
     self.dialogText = text
     self.dialogOptions = options
+    self.combatLog={}
     self.state="dialog"
 end
 
@@ -48,7 +49,6 @@ end
 function UI:hideDialog()
     self.state=""
     self.dialogText=""
-    self.combatLog={}
     self.dialogOptions={}
 end
 
@@ -75,7 +75,7 @@ function UI:showCharsheet(statTable)
         "Force: "..statTable.forc,
         "Finesse: "..statTable.fine,
         "Hardiness: "..statTable.hard,
-        "Contemplation: "..statTable.cont
+        --"Contemplation: "..statTable.cont
     }
     self.derivedTable = {
         "Damage: "..statTable.dmg,
@@ -129,10 +129,11 @@ function UI:draw()
     elseif self.state=="gameover" then
         self:drawGameOver()
     elseif self.state=="dialog" then
-        love.graphics.printf(self.dialogText, 10, love.graphics.getHeight() - 100, love.graphics.getWidth() - 20, "left")
-
+        local padFromBottom = ((#self.dialogOptions + 1) * 20) + 20 -- Pad based on dialog choices with a stock + 20 so that its not flush against the bottom
+        love.graphics.printf(self.dialogText, 10, love.graphics.getHeight() - padFromBottom, love.graphics.getWidth() - 20, "left")
+        local padDialogFromBottom = padFromBottom - 30
         for i, option in ipairs(self.dialogOptions) do
-            love.graphics.printf(i .. ". " .. option.text, 10, love.graphics.getHeight() - 70 + (i-1)*20, love.graphics.getWidth() - 20, "left")
+            love.graphics.printf(i .. ". " .. option.text, 10, love.graphics.getHeight() - padDialogFromBottom + (i-1)*20, love.graphics.getWidth() - 20, "left")
         end
     elseif self.state=="inventory" then -- Inventory
         self:drawInventory()

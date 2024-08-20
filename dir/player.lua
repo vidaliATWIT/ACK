@@ -37,16 +37,16 @@ function player:init(o)
     player.y = o.y or player.y
     -- Base Stats
     player.speed=o.speed or 1
-    player.force=o.force or 16
-    player.finesse=o.finesse or 16
-    player.contemplation=o.contemplation or 16
-    player.hardiness=o.hardiness or 16
+    player.force=o.force or 12
+    player.finesse=o.finesse or 12
+    player.contemplation=o.contemplation or 12
+    player.hardiness=o.hardiness or 12
     player:setMaxHPFromHardiness()
     player.hp=player.max_hp
     -- "Equipment" Stats
     player.inventory={
         items={},
-        gold=20000
+        gold=1000
     }
     player.armor={}
     player.weapon={}
@@ -287,7 +287,7 @@ function player:getAttributes()
 end
 
 function player:getStats()
-    local table = {name=self.name,hp=self.hp, max_hp=self.max_hp, dmg=self.damage,def=self.defense,forc=self.force,fine=self.finesse,hard=self.hardiness,cont=self.contemplation}
+    local table = {name=self.name,hp=self.hp, max_hp=self.max_hp, dmg=self.damage,def=self.defense,forc=self.force,fine=self.finesse,hard=self.hardiness}
     return table
 end
 

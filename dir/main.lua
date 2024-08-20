@@ -13,6 +13,7 @@ local debug=true
 local equipping=false
 local dropping=false
 local SoundManager = require("managers.soundManager")
+local playDreg = false
 
 
 function love.load()
@@ -43,6 +44,10 @@ function love.update(dt)
         handleScrolling()
         UI:updateHp(player.hp)
         if not player.isAlive() then
+            if (not playDreg) then
+                SoundManager:playDreg()
+                playDreg=true
+            end
             UI:showGameOver()
             GM.GameState.set("GAMEOVER")
         end

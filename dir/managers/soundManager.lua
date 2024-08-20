@@ -24,6 +24,18 @@ function SoundManager:load()
     sounds.down1 = love.audio.newSource("/res/sfx/DOWN3.wav", "static")
     -- TALK
     sounds.talk1 = love.audio.newSource("/res/sfx/TALK1.wav", "static")
+    -- GAME OVER
+    sounds.gameOver = love.audio.newSource("/res/sfx/anotherdreg2.mp3", "static")
+    -- MENU
+    sounds.click = love.audio.newSource("/res/sfx/CLICK1.wav", "static")
+end
+
+function SoundManager:playClick()
+    self:play("click")
+end
+
+function SoundManager:playDreg()
+    self:play("gameOver")
 end
 
 function SoundManager:playDescend()
