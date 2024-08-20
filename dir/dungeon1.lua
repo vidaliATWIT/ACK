@@ -637,7 +637,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["Content"] = "gold#15,healingPotion#1",
+            ["Content"] = "gold#250,healingPotion#1",
             ["Locked"] = false,
             ["Opened"] = false,
             ["Type"] = "CHEST"
@@ -689,7 +689,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["Content"] = "gold#30",
+            ["Content"] = "gold#250",
             ["Locked"] = false,
             ["Opened"] = false,
             ["Type"] = "CHEST"
@@ -707,7 +707,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["Content"] = "blueKey#1",
+            ["Content"] = "blueKey#1,gold#750",
             ["Locked"] = false,
             ["Opened"] = false,
             ["Type"] = "CHEST"

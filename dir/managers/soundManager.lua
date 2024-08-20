@@ -10,7 +10,7 @@ function SoundManager:load()
     -- HIT
     sounds.playerAttack1 = love.audio.newSource("/res/sfx/HIT1.wav", "static")
     sounds.playerAttack2 = love.audio.newSource("/res/sfx/HIT2.wav", "static")
-    --sounds.playerMiss1 = love.audio.newSource("/res/sfx/NOPE.wav", "static")
+    sounds.playerMiss1 = love.audio.newSource("/res/sfx/MISS1.wav", "static")
     -- WALK
     sounds.walk1 = love.audio.newSource("/res/sfx/WALK1.wav", "static")
     sounds.walk2 = love.audio.newSource("/res/sfx/WALK2.wav", "static")
@@ -28,8 +28,16 @@ function SoundManager:load()
     sounds.gameOver = love.audio.newSource("/res/sfx/anotherdreg2.mp3", "static")
     -- MENU
     sounds.click = love.audio.newSource("/res/sfx/CLICK1.wav", "static")
+    sounds.no = love.audio.newSource("/res/sfx/NOPE1.wav", "static")
 end
 
+function SoundManager:stop()
+    love.audio.stop()
+end
+
+function SoundManager:playNope()
+    self:play("no")
+end
 function SoundManager:playClick()
     self:play("click")
 end

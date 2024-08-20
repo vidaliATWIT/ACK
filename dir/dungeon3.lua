@@ -749,14 +749,14 @@ return {
           name = "",
           type = "",
           shape = "point",
-          x = 480,
+          x = 464,
           y = 32,
           width = 0,
           height = 0,
           rotation = 0,
           visible = true,
           properties = {
-            ["Content"] = "gold#15,healingPotion#1,strengthPotion#1",
+            ["Content"] = "gold#250,silverArmor#1,strengthPotion#1",
             ["Locked"] = false,
             ["Opened"] = false,
             ["Type"] = "CHEST"
@@ -790,7 +790,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["Content"] = "healingPotion#3,redKey#1",
+            ["Content"] = "gold#250,yellowKey#1",
             ["Locked"] = false,
             ["Opened"] = false,
             ["Type"] = "CHEST"
@@ -808,7 +808,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["Content"] = "gold#30,speedPotion#1",
+            ["Content"] = "gold#200,poisonedDagger#1",
             ["Locked"] = false,
             ["Opened"] = false,
             ["Type"] = "CHEST"
@@ -826,7 +826,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["Content"] = "healingPotion#3,redKey#1",
+            ["Content"] = "healingPotion#3,gold#1000",
             ["Locked"] = false,
             ["Opened"] = false,
             ["Type"] = "CHEST"
@@ -844,7 +844,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["Content"] = "gold#500,silverSword#1,yellowKey#1",
+            ["Content"] = "gold#500,yellowKey#1",
             ["Locked"] = false,
             ["Opened"] = false,
             ["Type"] = "CHEST"
@@ -898,7 +898,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["Color"] = "red",
+            ["Color"] = "yellow",
             ["Locked"] = true,
             ["Opened"] = false,
             ["Type"] = "DOOR"
@@ -916,7 +916,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["Color"] = "red",
+            ["Color"] = "yellow",
             ["Locked"] = true,
             ["Opened"] = false,
             ["Type"] = "DOOR"
@@ -1078,7 +1078,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["Content"] = "gold#30,speedPotion#1",
+            ["Content"] = "gold#750,speedPotion#1,silverSword#1",
             ["Locked"] = false,
             ["Opened"] = false,
             ["Type"] = "CHEST"

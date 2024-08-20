@@ -280,6 +280,7 @@ function GameMaster.displayHit(hit, damage, attacker_name, target_name)
     if hit then
         message = string.format("%s hit %s for %d points of damage!", attacker_name, target_name, damage)
     else
+        SoundManager:playMiss()
         message = string.format("%s missed...", attacker_name)
     end
     UI:addCombatMessage(message)

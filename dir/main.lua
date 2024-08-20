@@ -154,16 +154,22 @@ end
 
 function handleMainMenuInput(key)
     if key=='s' or key=='enter' then
+        SoundManager:stop()
+        SoundManager:playClick()
         resetGame()
     elseif key=='q' or key=='escape' then
+        SoundManager:playNope()
         handleQuit()
     end
 end
 
 function handleGameOverInput(key)
     if key=='y' or key=='enter' then
+        SoundManager:stop()
+        SoundManager:playClick()
         resetGame()
     elseif key=='n' or key=='escape' then
+        SoundManager:playNope()
         handleQuit()
     end
 end
