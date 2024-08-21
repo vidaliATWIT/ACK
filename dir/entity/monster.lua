@@ -4,6 +4,7 @@ local monster_dmg = {4, 6, 8, 10, 12, 12, 16, 18, 10, 22}
 local Dice = require("util.Dice")
 local Enums = require("util.Enums")
 local SoundManager = require("managers.soundManager")
+local UI = require("UI")
 
 local MonsterTemplates = {
     GOBLIN = {
@@ -12,7 +13,7 @@ local MonsterTemplates = {
         hd=1,
         monsterType="goblin",
         awarenessCooldown=3,
-        ability={multiAttackChance=4,duration=2}
+        ability={multiAttackChance=20,duration=2}
     },
     SKELETON = {
         name = "Skeleton",
@@ -61,7 +62,7 @@ local MonsterTemplates = {
     OGREKNIGHT = {
         name="Ogre",
         image="res/ogre1.png",
-        hd=2,
+        hd=3,
         monsterType="ogre",
         awarenessCooldown=3,
         ability={multiAttackChance=10,duration=2}
@@ -160,7 +161,7 @@ function monster:attack(player)
         if self.ability and self.ability.poisonChance and Dice.rollUnder(self.ability.poisonChance) then -- Wrap this in a helper function
             player:addStatus("poisoned", self.ability.duration)
         elseif self.ability and self.ability.multiAttackChance and Dice.rollUnder(self.ability.multiAttackChance) then -- MULTIATTACK BITCH
-            print("ATTACKED AGAIN!!!")
+            UI:addCombatMessage(self.name .. " hit again!")
             finalDamage = self.ability.duration*rawDamage
         end
         player:takeDamage(finalDamage)

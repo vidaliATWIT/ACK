@@ -10,13 +10,13 @@ ItemManager = {
             name="Strength Potion",
             type="consumable",
             value=20,
-            effect=function(player) player.addStatus("strengthened", 10) end
+            effect=function(player) player:addStatus("strengthened", 10) end
         },
         speedPotion = {
             name="Speed Potion",
             type="consumable",
             value=20,
-            effect=function(player) player.addStatus("agile", 10) end
+            effect=function(player) player:addStatus("agile", 10) end
         },
         ironSword = {
             name="Iron Sword",

@@ -808,7 +808,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["Content"] = "gold#200,poisonedDagger#1",
+            ["Content"] = "gold#200,poisonedDagger#1,healingPotion#3",
             ["Locked"] = false,
             ["Opened"] = false,
             ["Type"] = "CHEST"
@@ -844,7 +844,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["Content"] = "gold#500,yellowKey#1",
+            ["Content"] = "gold#500,yellowKey#1,healingPotion#3",
             ["Locked"] = false,
             ["Opened"] = false,
             ["Type"] = "CHEST"
