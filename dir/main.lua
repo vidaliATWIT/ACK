@@ -254,7 +254,7 @@ function handleCharsheetInput(key)
 end
 
 function handleScrolling()
-    local bufferTile = 1
+    local bufferTile = 4
     local newOffsetX = 0
     local newOffsetY = 0
 
@@ -263,18 +263,18 @@ function handleScrolling()
         
     local scrollX, scrollY = 0, 0
 
-    if newScreenX < TILE_TO_PIXEL then
+    if newScreenX < TILE_TO_PIXEL*4 then
         newOffsetX = bufferTile - player.x
         scrollX = 1
-    elseif newScreenX > _G.width - 2 * TILE_TO_PIXEL then
+    elseif newScreenX > _G.width - 5 * TILE_TO_PIXEL then
         newOffsetX = _G.screenTilesX-(1+bufferTile+player.x)
         scrollX = -1
     end
         
-    if newScreenY < TILE_TO_PIXEL then
+    if newScreenY < TILE_TO_PIXEL*4 then
         newOffsetY=bufferTile - player.y
         scrollY = 1
-    elseif newScreenY > _G.height - 2 * TILE_TO_PIXEL then
+    elseif newScreenY > _G.height - 5 * TILE_TO_PIXEL then
         newOffsetY=_G.screenTilesY-(1+bufferTile+player.y)
         scrollY = -1
     end

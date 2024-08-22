@@ -20,7 +20,7 @@ function player:load()
     player.moving=false
     -- Stats
     player.speed=1
-    player.torch_light=50
+    player.torch_light=100
     -- Conditions
     player.statuses = {}
 end
@@ -77,7 +77,7 @@ function player:keypressed(key)
         if self.torch_light==50 then
             self.torch_light=100
         else
-            self.torch_light=50
+            self.torch_light=100
         end
     end
     return player.targetX,player.targetY

@@ -6,7 +6,7 @@ local Enums = require("util.Enums")
 
 local NPCTemplates = {
     MOOK = { -- TALKERS & YAPPERS
-        image = "/res/human1.png",
+        image = "/res/priest.png",
         hd = 1,
         npcType="mook",
         awarenessCooldown=3,
@@ -14,7 +14,7 @@ local NPCTemplates = {
         offers_quests=true,
     },
     TRAINER = { -- NPCs that can train the player
-        image = "/res/human2.png",
+        image = "/res/trainer.png",
         hd = 5,
         npcType="trainer",
         awarenessCooldown=4,
