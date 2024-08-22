@@ -29,6 +29,8 @@ function SoundManager:load()
     -- MENU
     sounds.click = love.audio.newSource("/res/sfx/CLICK1.wav", "static")
     sounds.no = love.audio.newSource("/res/sfx/NOPE1.wav", "static")
+    -- WIN THEME
+    sounds.winTheme = love.audio.newSource("/res/music/winTheme.mp3", "static")
 end
 
 function SoundManager:stop()
@@ -44,6 +46,10 @@ end
 
 function SoundManager:playDreg()
     self:play("gameOver")
+end
+
+function SoundManager:playWin()
+    self:play("winTheme")
 end
 
 function SoundManager:playDescend()

@@ -10,6 +10,7 @@ local EQUIPMENT_SLOTS = {
     armor = {field = "armor", defaultStat="defense", defaultValue=0}
 }
 local STATUS_EFFECTS = require("statusEffects")
+local UI = require("UI")
 
 function player:load()
     player.image = love.graphics.newImage("res/pc.png")
@@ -37,10 +38,10 @@ function player:init(o)
     player.y = o.y or player.y
     -- Base Stats
     player.speed=o.speed or 1
-    player.force=o.force or 12
-    player.finesse=o.finesse or 12
-    player.contemplation=o.contemplation or 12
-    player.hardiness=o.hardiness or 12
+    player.force=o.force or 16
+    player.finesse=o.finesse or 16
+    player.contemplation=o.contemplation or 16
+    player.hardiness=o.hardiness or 16
     player:setMaxHPFromHardiness()
     player.hp=player.max_hp
     -- "Equipment" Stats
@@ -127,6 +128,10 @@ function player:addItem(itemName,itemDef,count)
     local addedCount = 0
     for i=1, count do
         if #self.inventory.items < 10 then
+            if itemDef.skeletonKey then -- If item is the skeleton key
+                player.quests["mainQuest"]="complete"
+                UI:addCombatMessage("You have acquired the Skeleton Key! Return to the priest to receive your reward!")
+            end
             table.insert(self.inventory.items, {name=itemDef.name, def=itemDef})
             addedCount = addedCount+1
         else
@@ -192,11 +197,12 @@ function player:equipItem(item,slotInfo)
     if not slotInfo then return end
 
     -- Unequip current item in the slot if any
-    if self[slotInfo.field] then
-        self:unequipItem(self[slotInfo.field])
+    if self[slotInfo.field] and self[slotInfo.field].def then
+        self:unequipItem(self[slotInfo.field], slotInfo)
     end
 
     -- Equip new item
+    print("Equipping new item: ", item.def.name)
     self[slotInfo.field] = item
     self[slotInfo.defaultStat] = item.def[slotInfo.defaultStat]
     item.def.equipped="(Equipped)"

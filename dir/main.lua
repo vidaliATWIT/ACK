@@ -14,6 +14,7 @@ local equipping=false
 local dropping=false
 local SoundManager = require("managers.soundManager")
 local playDreg = false
+local playWin = false
 
 
 function love.load()
@@ -43,7 +44,15 @@ function love.update(dt)
         updateTransition(dt)
         handleScrolling()
         UI:updateHp(player.hp)
-        if not player.isAlive() then
+        if player.won and player.won==true then
+            if (not playWin) then
+                SoundManager:playWin()
+                playWin=true
+            end
+            UI:showWinScreen()
+            GM.GameState.set("WIN")
+        
+        elseif not player.isAlive() then
             if (not playDreg) then
                 SoundManager:playDreg()
                 playDreg=true
@@ -111,7 +120,7 @@ end
  
 function love.draw()
     -- game rendering here
-    if gameStarted and GM.GameState.get()~="GAMEOVER" then
+    if gameStarted and GM.GameState.get()~="GAMEOVER" and GM.GameState.get()~="WIN" then
         local startX = -GM.offsetX
         local startY = -GM.offsetY
         local endX = math.ceil((startX + _G.width*PIXEL_TO_TILE))
@@ -149,6 +158,8 @@ function love.keypressed(key)
         handleGameOverInput(key)
     elseif GM.GameState.get()=="CHARSHEET" then
         handleCharsheetInput(key)
+    elseif GM.GameState.get()=="WIN" then
+        handleWinInput(key)
     end
 end
 
@@ -250,6 +261,13 @@ function handleCharsheetInput(key)
     if key=="escape" or key=="c" or key=="q" then
         UI:hideCharsheet()
         GM.GameState.set("EXPLORING")
+    end
+end
+
+function handleWinInput(key)
+    if key=="e" or key=="enter" then
+        SoundManager:playNope()
+        handleQuit()
     end
 end
 

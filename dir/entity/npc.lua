@@ -21,12 +21,21 @@ local NPCTemplates = {
         offers_training=true,
         offers_quests=true,
     },
+    PRIESTESS = { -- THE ORIGINAL
+        image="/res/priestess.png",
+        hd=10,
+        npcType="mook",
+        awarenessCooldown=20,
+        offers_training=true,
+        offers_quests=true,
+    }
 }
 
 
 npc.__index = npc
 
 function npc:new(templateName, name, x, y)
+    print("name", name)
     local template=NPCTemplates[templateName]
     if not template then
         error("Unknown npc template: " .. templateName)

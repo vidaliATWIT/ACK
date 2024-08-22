@@ -103,6 +103,10 @@ function UI:showGameOver()
     self.state="gameover"
 end
 
+function UI:showWinScreen()
+    self.state="win"
+end
+
 function UI:drawGameOver()
     local height = love.graphics.getHeight()
     local width = love.graphics.getWidth()
@@ -110,6 +114,16 @@ function UI:drawGameOver()
     love.graphics.printf("DEATH COMES. PERSIST IN YOUR DELUSIONS?", 0, height/4, width, "center")
     love.graphics.printf("Y)es",0,height/3, width, "center")
     love.graphics.printf("N)o",0,height/2, width, "center")
+end
+
+function UI:drawWinScreen()
+    local height = love.graphics.getHeight()
+    local width = love.graphics.getWidth()
+    love.graphics.setFont(self.menuFont)
+    love.graphics.printf("DEMIURGE DEFEATED. TRUTH PREVAILS.", 0, height/4, width, "center")
+    love.graphics.printf("REST NOW FOR THERE IS MORE YET TO COME...",0,height/3, width, "center")
+
+    love.graphics.printf("E)XIT",0,height/2, width, "center")
 end
 
 function UI:drawMainMenu()
@@ -128,6 +142,8 @@ function UI:draw()
         self:drawMainMenu()
     elseif self.state=="gameover" then
         self:drawGameOver()
+    elseif self.state=="win" then
+        self:drawWinScreen()
     elseif self.state=="dialog" then
         local padFromBottom = ((#self.dialogOptions + 1) * 20) + 20 -- Pad based on dialog choices with a stock + 20 so that its not flush against the bottom
         love.graphics.printf(self.dialogText, 10, love.graphics.getHeight() - padFromBottom, love.graphics.getWidth() - 20, "left")

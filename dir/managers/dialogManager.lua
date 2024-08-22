@@ -13,6 +13,7 @@ function DialogManager:startDialog(npc)
 end
 
 function DialogManager:getCurrentText()
+    print(self.currentNPC, self.currentDialog)
     return self:resolveText(self.currentDialog.text,self.currentNPC)
 end
 
@@ -29,10 +30,12 @@ function DialogManager:resolveText(text,npc)
 end
 
 function DialogManager:resolveDialog(dialog, npc)
+    print("resolving")
     while type(dialog) == "function" do
         dialog = dialog(player)
         dialog = dialogTrees[npc.name][dialog]
     end
+    print("dialog: ", dialog)
     return dialog
 end
 

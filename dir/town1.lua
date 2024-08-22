@@ -10,7 +10,7 @@ return {
   tilewidth = 16,
   tileheight = 16,
   nextlayerid = 8,
-  nextobjectid = 43,
+  nextobjectid = 45,
   properties = {},
   tilesets = {
     {
@@ -386,7 +386,7 @@ return {
       id = 4,
       name = "SpawnPoints",
       class = "",
-      visible = true,
+      visible = false,
       opacity = 1,
       offsetx = 0,
       offsety = 0,
@@ -551,7 +551,7 @@ return {
       id = 6,
       name = "Interactable",
       class = "",
-      visible = true,
+      visible = false,
       opacity = 1,
       offsetx = 0,
       offsety = 0,
@@ -571,7 +571,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["Content"] = "gold#40,ironSword#1,redKey#1,greenKey#1,leatherArmor#1,healthPotion#4",
+            ["Content"] = "gold#40,ironSword#1,redKey#1,leatherArmor#1,healthPotion#3",
             ["Locked"] = false,
             ["Opened"] = false,
             ["Type"] = "CHEST"

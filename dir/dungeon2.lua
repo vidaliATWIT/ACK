@@ -357,7 +357,7 @@ return {
       id = 4,
       name = "SpawnPoints",
       class = "",
-      visible = true,
+      visible = false,
       opacity = 1,
       offsetx = 0,
       offsety = 0,
@@ -617,7 +617,7 @@ return {
       id = 7,
       name = "PlayerSpawn",
       class = "",
-      visible = true,
+      visible = false,
       opacity = 1,
       offsetx = 0,
       offsety = 0,
@@ -646,7 +646,7 @@ return {
       id = 6,
       name = "Interactable",
       class = "",
-      visible = true,
+      visible = false,
       opacity = 1,
       offsetx = 0,
       offsety = 0,
@@ -736,7 +736,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["Content"] = "healingPotion#3,redKey#1,gold#750",
+            ["Content"] = "redKey#1,gold#750",
             ["Locked"] = false,
             ["Opened"] = false,
             ["Type"] = "CHEST"
@@ -754,7 +754,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["Content"] = "gold#500,steelSword#1,greenKey#1,redKey#1,healingPotion#3",
+            ["Content"] = "gold#500,steelSword#1,blueKey#1,redKey#1,healthPotion#1",
             ["Locked"] = false,
             ["Opened"] = false,
             ["Type"] = "CHEST"

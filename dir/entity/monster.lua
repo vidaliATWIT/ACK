@@ -153,7 +153,7 @@ function monster:getDamage()
 end
 
 function monster:attack(player)
-    if Dice.rollUnder(player.finesse) then
+    if not Dice.rollUnder(player.finesse) then
         SoundManager:playHit()
         local baseDmg = monster_dmg[self.hd]
         local rawDamage = Dice.roll(baseDmg)
