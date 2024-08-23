@@ -30,7 +30,7 @@ function love.load()
     -- Set Title
     love.window.setTitle("ACK!")
 
-    if debug then
+    if false then
         resetGame()
     else    
         UI:initialize()
@@ -136,7 +136,7 @@ function love.draw()
         drawEntity(player,true)
     end
     UI:draw()
-    if GM.transitionState.active then
+    if GM.transitionState and GM.transitionState.active then
         love.graphics.setColor(0, 0, 0, GM.transitionState.alpha)
         love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
         love.graphics.setColor(1, 1, 1, 1)

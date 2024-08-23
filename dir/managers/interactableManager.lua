@@ -75,32 +75,47 @@ end
 
 -- Open chest
 function InteractableManager:openChest(player,chest)
-    if chest and chest.type=="CHEST" and not chest.opened and chest.contents~="" then
+    if chest and chest.type == "CHEST" and not chest.opened and chest.contents ~= "" then
         local contents = parseContents(chest.contents)
         local itemsCollected = {}
-        for itemName,count in pairs(contents) do
-            if itemName=="gold" then -- Add gold, and stack em high
+        local remainingContentString = ""
+
+        for itemName, count in pairs(contents) do
+            if itemName == "gold" then
                 player:addGold(count)
-                table.insert(itemsCollected,count.." gold")
+                table.insert(itemsCollected, count .. " gold")
             else
-                local itemDef = ItemManager:getItem(itemName) -- Add items (swords, armor, etc) and don't stack em high...
+                local itemDef = ItemManager:getItem(itemName)
                 if itemDef then
                     local addedCount = player:addItem(itemName, itemDef, count)
-                    if addedCount>0 then
-                        if addedCount==1 then
-                            table.insert(itemsCollected,itemDef.name)
+                    if addedCount > 0 then
+                        if addedCount == 1 then
+                            table.insert(itemsCollected, itemDef.name)
                         else
                             table.insert(itemsCollected, addedCount .. " " .. itemDef.name)
                         end
-                    elseif addedCount < count then
-                        local notAdded = count - addedCount 
+                    end
+                    
+                    -- If not all items were added, keep the remaining in the chest
+                    if addedCount < count then
+                        local notAdded = count - addedCount
+                        remainingContentString = remainingContentString .. (itemName .. "#"..notAdded) .. ","
+                        
                         table.insert(itemsCollected, "Couldn't pick up " .. notAdded .. " " .. itemDef.name .. " (inventory full)")
                     end
                 end
             end
         end
-        chest.opened = true
-        chest.contents = ""
+
+        
+        -- Update chest contents with remaining items
+        if (remainingContentString~="") then
+            print(string.sub(remainingContentString, 1, -2))
+            chest.contents = string.sub(remainingContentString, 1, -2)
+        else
+            chest.opened = true
+        end
+        
         local message = "You found: " .. table.concat(itemsCollected, ", ")
         return false, message
     else

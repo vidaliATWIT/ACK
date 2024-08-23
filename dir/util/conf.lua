@@ -4,7 +4,7 @@ local conf = {
 }
 
 function love.conf(t)
-    t.console = true
+    t.console = false
 end
 
 function conf:arrayToPos(x,y)

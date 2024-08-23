@@ -143,7 +143,7 @@ local DialogTrees = {
             }
         },
         monsters = {
-            text = "Foul monsters, each more powerful than the last. Be cautious.",
+            text = "Foul monsters, some undead, others of the goblish races. Be cautious.",
             options = {
                 {text = "Thanks. Can I ask you something else?", next="advice"},
                 {text = "Understood. Goodbye now.", next="exit"},
@@ -164,7 +164,7 @@ local DialogTrees = {
             }
         },
         goal = {
-            text = "The skeleton key, guarded by an Ogre Knight. If you find it, bring it here.",
+            text = "The skeleton key, guarded by a Knight. If you find it, bring it here.",
             options = {
                 {text = "Can I ask you something else?", next="advice"},
                 {text = "Understood. Goodbye now.", next="exit"},
@@ -268,10 +268,6 @@ local DialogTrees = {
             },
             effect = function(player)
                 handleTraining(player, "force", getTrainingCost(player.force))
-                --player:removeGold(getTrainingCost(player.force))
-                --player.force=player.force+1
-                --print("PLAYER FORCE", player.force)
-                --print(player.name,  " got better at swinging his sword... ", player.force)
             end
         },
         too_strong = {

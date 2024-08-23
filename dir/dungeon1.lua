@@ -671,7 +671,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["Content"] = "healthPotion#1redKey#1",
+            ["Content"] = "healthPotion#1,redKey#1",
             ["Locked"] = false,
             ["Opened"] = false,
             ["Type"] = "CHEST"
