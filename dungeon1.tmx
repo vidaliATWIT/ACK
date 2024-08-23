@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="45">
+ <editorsettings>
+  <export target="dir/dungeon1.lua" format="lua"/>
+ </editorsettings>
+ <tileset firstgid="1" name="monochrome_red_tileset" tilewidth="16" tileheight="16" tilecount="256" columns="16">
+  <image source="dir/res/mono_tile_set.png" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="257" name="monochrome_red_tileset" tilewidth="16" tileheight="16" tilecount="256" columns="16">
+  <image source="dir/res/mono_tile_set.png" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="513" name="monochrome_red_tileset" tilewidth="16" tileheight="16" tilecount="256" columns="16">
+  <image source="dir/res/mono_tile_set.png" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="769" name="monochrome_red_tileset" tilewidth="16" tileheight="16" tilecount="256" columns="16">
+  <image source="dir/res/mono_tile_set.png" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="1025" name="monochrome_red_tileset" tilewidth="16" tileheight="16" tilecount="256" columns="16">
+  <image source="dir/res/mono_tile_set.png" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="1281" name="monochrome_red_tileset" tilewidth="16" tileheight="16" tilecount="256" columns="16">
+  <image source="dir/res/mono_tile_set.png" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="1537" name="monochrome_red_tileset" tilewidth="16" tileheight="16" tilecount="256" columns="16">
+  <image source="dir/res/mono_tile_set.png" width="256" height="256"/>
+ </tileset>
+ <layer id="2" name="Floor" width="32" height="32">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,517,517,516,517,516,516,516,517,516,517,517,516,517,517,517,517,0,0,773,516,516,516,517,517,516,517,516,0,0,0,0,
+0,517,517,517,516,517,516,516,516,516,516,517,516,517,517,517,517,0,0,517,514,514,514,517,517,517,516,517,0,0,0,0,
+0,516,516,0,0,0,0,0,0,516,517,0,0,0,0,0,0,0,0,517,516,516,516,516,0,0,517,516,0,517,517,0,
+0,517,517,0,0,0,0,0,0,516,516,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,516,516,0,517,517,0,
+0,516,517,0,0,516,517,517,517,517,516,0,0,0,0,0,0,0,0,0,0,0,0,517,517,516,516,516,517,517,517,0,
+0,516,517,0,0,516,516,516,517,517,516,0,0,0,0,0,0,0,0,0,0,0,0,516,517,517,517,517,517,517,517,0,
+0,0,584,0,0,516,516,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,517,517,0,516,516,0,517,517,0,
+0,517,517,0,0,517,516,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,517,516,0,516,516,0,517,517,0,
+0,517,517,0,0,517,516,516,516,516,516,517,516,516,516,516,516,516,516,516,516,517,517,517,517,0,516,517,0,517,517,0,
+0,0,517,0,0,517,516,516,517,516,516,517,516,517,517,517,516,516,516,516,517,517,517,517,516,0,517,517,0,517,517,0,
+0,0,0,0,0,0,0,0,0,584,584,0,0,0,0,0,584,584,0,0,0,0,0,0,0,0,517,517,0,517,517,0,
+0,0,0,0,0,0,0,516,516,516,517,516,517,0,517,516,516,517,516,517,0,0,0,0,0,0,516,516,0,0,517,0,
+0,0,0,0,0,0,0,516,516,517,517,516,516,0,517,516,516,517,516,517,0,0,0,0,0,0,517,516,0,0,582,0,
+0,0,0,0,0,0,0,517,517,517,517,516,0,0,516,517,516,517,516,0,0,0,0,0,0,0,517,516,0,0,582,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,516,516,0,640,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,516,516,0,640,0,0,
+0,0,0,0,0,0,0,0,0,0,517,516,517,516,517,516,0,0,0,0,0,0,0,0,0,0,516,517,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,516,517,516,517,517,517,0,0,0,0,0,0,0,0,0,0,517,516,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,516,516,516,516,516,517,0,0,0,0,0,0,0,0,0,0,516,516,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,516,517,517,517,516,516,0,0,0,0,0,0,0,0,0,0,517,516,0,0,0,0,
+0,5,517,517,516,517,516,517,517,516,517,517,517,517,516,516,517,516,517,516,516,516,517,516,517,517,517,516,0,0,0,0,
+0,0,517,517,517,517,517,517,516,517,517,517,517,517,517,516,517,516,517,517,517,517,516,516,516,516,517,517,0,0,0,0,
+0,0,0,0,516,516,0,517,516,0,516,517,516,516,516,517,0,516,516,0,517,516,0,0,0,0,516,517,0,0,0,0,
+0,0,517,0,517,0,0,517,517,0,517,517,517,516,517,517,0,516,517,0,517,516,0,0,0,0,517,516,0,0,0,0,
+0,516,516,0,0,0,0,0,0,0,516,517,516,516,517,516,0,0,0,0,0,0,0,0,0,0,517,516,0,0,0,0,
+0,516,517,517,517,516,517,0,0,0,517,516,517,516,516,517,0,0,0,0,0,0,0,0,0,0,517,516,0,0,0,0,
+0,516,517,0,0,516,517,0,0,0,0,516,516,517,517,0,0,0,517,517,516,516,516,516,517,516,516,517,516,516,516,0,
+0,517,517,0,0,517,517,0,0,0,0,0,0,0,0,0,0,0,517,516,517,517,516,516,516,517,516,516,517,516,517,0,
+0,516,516,0,0,516,517,517,517,517,517,516,516,517,516,516,517,517,517,517,0,0,0,0,0,0,516,517,0,0,0,0,
+0,516,517,517,517,517,517,516,517,516,516,517,517,516,516,517,517,517,516,516,0,0,0,0,0,0,516,516,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer id="1" name="Walls" width="32" height="32">
+  <data encoding="csv">
+640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,
+640,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,640,640,0,0,0,0,0,0,0,0,0,640,640,640,640,
+640,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,640,640,0,0,0,0,0,0,0,0,0,640,640,640,640,
+640,0,0,640,640,640,640,640,640,0,0,640,640,640,640,640,640,640,640,0,0,0,0,0,640,640,0,0,640,0,0,640,
+640,0,0,640,640,640,640,640,640,0,0,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,0,0,640,0,0,640,
+640,0,0,640,640,0,0,0,0,0,0,640,640,640,640,640,640,640,640,640,640,640,640,0,0,0,0,0,0,0,0,640,
+640,0,0,640,640,0,0,0,0,0,0,640,640,640,640,640,640,640,640,640,640,640,640,0,0,0,0,0,0,0,0,640,
+640,640,0,640,640,0,0,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,0,0,640,0,0,640,0,0,640,
+640,0,0,640,640,0,0,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,0,0,640,0,0,640,0,0,640,
+640,0,0,640,640,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,640,0,0,640,0,0,640,
+640,0,0,640,640,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,640,0,0,640,0,0,640,
+640,640,640,640,640,640,640,640,640,0,0,640,640,640,640,640,0,0,640,640,640,640,640,640,640,640,0,0,640,0,0,640,
+640,640,640,640,640,640,640,0,0,0,0,0,0,640,0,0,0,0,0,0,640,640,640,640,640,640,0,0,640,640,0,640,
+640,640,640,640,640,640,640,0,0,0,0,0,0,640,0,0,0,0,0,0,640,640,640,640,640,640,0,0,640,640,0,640,
+640,640,640,640,640,640,640,0,0,0,0,0,0,640,0,0,0,0,0,0,640,640,640,640,640,640,0,0,640,640,0,640,
+640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,0,0,640,0,640,640,
+640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,0,0,640,0,640,640,
+640,640,640,640,640,640,640,640,640,640,0,0,0,0,0,0,640,640,640,640,640,640,640,640,640,640,0,0,640,640,640,640,
+640,640,640,640,640,640,640,640,640,640,0,0,0,0,0,0,640,640,640,640,640,640,640,640,640,640,0,0,640,640,640,640,
+640,640,640,640,640,640,640,640,640,640,0,0,0,0,0,0,640,640,640,640,640,640,640,640,640,640,0,0,640,640,640,640,
+640,640,640,640,640,640,640,640,640,640,0,0,0,0,0,0,640,640,640,640,640,640,640,640,640,640,0,0,640,640,640,640,
+640,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,640,640,640,640,
+640,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,640,640,640,640,
+640,640,640,640,0,0,640,0,0,640,0,0,0,0,0,0,640,0,0,640,0,0,640,640,640,640,0,0,640,640,640,640,
+640,685,0,640,0,0,640,0,0,640,0,0,0,0,0,0,640,0,0,640,0,0,640,640,640,640,0,0,640,640,640,640,
+640,0,0,640,640,640,640,640,640,640,0,0,0,0,0,0,640,640,640,640,640,640,640,640,640,640,0,0,640,640,640,640,
+640,0,0,0,0,0,0,640,640,640,0,0,0,0,0,0,640,640,640,640,640,640,640,640,640,640,0,0,640,640,640,640,
+640,0,0,514,514,0,0,640,640,640,640,0,0,0,0,640,640,640,0,0,0,0,0,0,0,0,0,0,0,0,0,640,
+640,0,0,514,514,0,0,640,640,640,640,640,640,640,640,640,640,640,0,0,0,0,0,0,0,0,0,0,0,0,0,640,
+640,0,0,514,514,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,640,640,640,640,640,640,0,0,640,640,640,640,
+640,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,640,640,640,640,640,640,0,0,640,640,640,640,
+640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640,640
+</data>
+ </layer>
+ <objectgroup id="4" name="SpawnPoints" visible="0">
+  <object id="5" x="304" y="16">
+   <properties>
+    <property name="SubType" value="SKELETON"/>
+    <property name="Type" value="MONSTER"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="6" x="16" y="112">
+   <properties>
+    <property name="SubType" value="SKELETON"/>
+    <property name="Type" value="MONSTER"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="8" x="464" y="448">
+   <properties>
+    <property name="SubType" value="SKELETON"/>
+    <property name="Type" value="MONSTER"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="9" x="256" y="16">
+   <properties>
+    <property name="SubType" value="DARKELF"/>
+    <property name="Type" value="MONSTER"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="11" x="416" y="352">
+   <properties>
+    <property name="SubType" value="SKELETON"/>
+    <property name="Type" value="MONSTER"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="25" x="96" y="432">
+   <properties>
+    <property name="SubType" value="DARKELF"/>
+    <property name="Type" value="MONSTER"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="26" x="240" y="32">
+   <properties>
+    <property name="SubType" value="DARKELF"/>
+    <property name="Type" value="MONSTER"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="27" x="272" y="224">
+   <properties>
+    <property name="SubType" value="SKELETON"/>
+    <property name="Type" value="MONSTER"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="28" x="240" y="288">
+   <properties>
+    <property name="SubType" value="SKELETON"/>
+    <property name="Type" value="MONSTER"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="29" x="32" y="112">
+   <properties>
+    <property name="SubType" value="SKELETON"/>
+    <property name="Type" value="MONSTER"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="30" x="128" y="224">
+   <properties>
+    <property name="SubType" value="DARKELF"/>
+    <property name="Type" value="MONSTER"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="31" x="16" y="480">
+   <properties>
+    <property name="SubType" value="SKELETON"/>
+    <property name="Type" value="MONSTER"/>
+   </properties>
+   <point/>
+  </object>
+ </objectgroup>
+ <layer id="5" name="Interactable" width="32" height="32">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,638,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,573,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,637,636,0,0,0,0,0,637,636,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,586,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,573,0,0,0,0,0,0,573,0,0,0,0,0,0,0,0,0,0,685,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,540,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,573,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <objectgroup id="7" name="PlayerSpawn" visible="0">
+  <object id="23" x="32" y="352">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="6" name="Interactable" visible="0">
+  <object id="16" x="80" y="384">
+   <properties>
+    <property name="Content" value="gold#250,healthPotion#1"/>
+    <property name="Locked" type="bool" value="false"/>
+    <property name="Opened" type="bool" value="false"/>
+    <property name="Type" value="CHEST"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="24" x="16" y="352">
+   <properties>
+    <property name="NextMap" value="town1"/>
+    <property name="Type" value="EXIT"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="32" x="192" y="224">
+   <properties>
+    <property name="Content" value="healthPotion#1,redKey#1"/>
+    <property name="Locked" type="bool" value="false"/>
+    <property name="Opened" type="bool" value="false"/>
+    <property name="Type" value="CHEST"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="33" x="304" y="224">
+   <properties>
+    <property name="Content" value="gold#250"/>
+    <property name="Locked" type="bool" value="false"/>
+    <property name="Opened" type="bool" value="false"/>
+    <property name="Type" value="CHEST"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="34" x="16" y="160">
+   <properties>
+    <property name="Content" value="greenKey#1,gold#750"/>
+    <property name="Locked" type="bool" value="false"/>
+    <property name="Opened" type="bool" value="false"/>
+    <property name="Type" value="CHEST"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="35" x="16" y="384">
+   <properties>
+    <property name="Content" value="healthPotion#2,chainArmor#1"/>
+    <property name="Locked" type="bool" value="false"/>
+    <property name="Opened" type="bool" value="false"/>
+    <property name="Type" value="CHEST"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="36" x="480" y="224">
+   <properties>
+    <property name="Content" value="gold#400,silverSword#1"/>
+    <property name="Locked" type="bool" value="false"/>
+    <property name="Opened" type="bool" value="false"/>
+    <property name="Type" value="CHEST"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="39" x="144" y="176">
+   <properties>
+    <property name="Color" value="copper"/>
+    <property name="Locked" type="bool" value="false"/>
+    <property name="Opened" type="bool" value="false"/>
+    <property name="Type" value="DOOR"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="41" x="32" y="112">
+   <properties>
+    <property name="Color" value="red"/>
+    <property name="Locked" type="bool" value="true"/>
+    <property name="Opened" type="bool" value="false"/>
+    <property name="Type" value="DOOR"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="42" x="160" y="176">
+   <properties>
+    <property name="Color" value="copper"/>
+    <property name="Locked" type="bool" value="false"/>
+    <property name="Opened" type="bool" value="false"/>
+    <property name="Type" value="DOOR"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="43" x="256" y="176">
+   <properties>
+    <property name="Color" value="copper"/>
+    <property name="Locked" type="bool" value="false"/>
+    <property name="Opened" type="bool" value="false"/>
+    <property name="Type" value="DOOR"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="44" x="272" y="176">
+   <properties>
+    <property name="Color" value="copper"/>
+    <property name="Locked" type="bool" value="false"/>
+    <property name="Opened" type="bool" value="false"/>
+    <property name="Type" value="DOOR"/>
+   </properties>
+   <point/>
+  </object>
+ </objectgroup>
+</map>
