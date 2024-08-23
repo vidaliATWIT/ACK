@@ -3,7 +3,7 @@ local scale = conf.scale_factor
 local TILE_SIZE = 16
 local PIXEL_TO_TILE = 1 / scale / TILE_SIZE
 local TILE_TO_PIXEL = TILE_SIZE * scale
-local ItemManager = require("managers/ItemManager")
+local ItemManager = require("managers/itemManager")
 
 InteractableManager = {}
 

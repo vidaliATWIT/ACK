@@ -1,8 +1,8 @@
-local Entity = require("entity.Entity")
+local Entity = require("entity.entity")
 local npc = setmetatable({}, {__index = Entity})
 local npc_dmg = {4, 6, 8, 10, 12, 12, 16, 18, 10, 22}
-local Dice = require("util.Dice")
-local Enums = require("util.Enums")
+local Dice = require("util.dice")
+local Enums = require("util.enums")
 
 local NPCTemplates = {
     MOOK = { -- TALKERS & YAPPERS

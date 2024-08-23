@@ -1,4 +1,4 @@
-local dialogTrees = require("dialog.DialogTrees")
+local dialogTrees = require("dialog.dialogTrees")
 local player = require("player")
 local SoundManager = require("managers.soundManager")
 

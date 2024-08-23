@@ -30,7 +30,7 @@ function SoundManager:load()
     sounds.click = love.audio.newSource("/res/sfx/CLICK1.wav", "static")
     sounds.no = love.audio.newSource("/res/sfx/NOPE1.wav", "static")
     -- WIN THEME
-    sounds.winTheme = love.audio.newSource("/res/music/winTheme.mp3", "static")
+    sounds.winTheme = love.audio.newSource("/res/music/wintheme.mp3", "stream")
 end
 
 function SoundManager:stop()

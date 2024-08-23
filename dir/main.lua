@@ -1,12 +1,12 @@
 local player = require("player")
 local conf = require("util.conf")
 local monster = require("entity.monster")
-local GM = require("managers.GameMaster")
+local GM = require("managers.gamemaster")
 local scale = conf.scale_factor
 local TILE_SIZE = 16
 local PIXEL_TO_TILE = 1 / scale / TILE_SIZE
 local TILE_TO_PIXEL = TILE_SIZE * scale
-local UI = require("UI")
+local UI = require("ui")
 local readyToQuit = false
 local gameStarted = false
 local debug=true

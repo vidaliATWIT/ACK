@@ -2,7 +2,7 @@
 local player = {}
 local config = require("util.conf")
 local scale = config.scale_factor
-local Dice = require("util.Dice")
+local Dice = require("util.dice")
 local SoundManager = require("managers.soundManager")
 local Bonuses = {}
 local EQUIPMENT_SLOTS = {
@@ -10,7 +10,7 @@ local EQUIPMENT_SLOTS = {
     armor = {field = "armor", defaultStat="defense", defaultValue=0}
 }
 local STATUS_EFFECTS = require("statusEffects")
-local UI = require("UI")
+local UI = require("ui")
 
 function player:load()
     player.image = love.graphics.newImage("res/pc.png")

@@ -1,6 +1,6 @@
 --Look into sysl-text later, it probably handles this stuff a lot better.
 
-local UI = require("UI")
+local UI = require("ui")
 
 local trainingCost = {[10]=100,[11]=150,[12]=250,[13]=500,[14]=1000,[15]=2000,[16]=3500}
 

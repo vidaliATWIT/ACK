@@ -1,5 +1,5 @@
 local Entity = {}
-local Enums = require("util.Enums")
+local Enums = require("util.enums")
 
 function Entity:new(o)
     o=o or {} -- create object if user does not provide one
